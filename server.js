@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import mysql from 'mysql2/promise';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
@@ -25,6 +26,17 @@ const dbConfig = {
 // Create a pool for better performance
 const pool = mysql.createPool(dbConfig);
 
+// Email Transporter Configuration
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: process.env.EMAIL_SECURE === 'true', // true for 465, false for other ports
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
 const functionsRouter = express.Router();
 
 // GET /features - Keeping compatibility
@@ -38,7 +50,7 @@ functionsRouter.get('/features', (req, res) => {
   res.json(features);
 });
 
-// POST /lead - Saving to database
+// POST /lead - Saving to database and sending email
 functionsRouter.post('/lead', async (req, res) => {
   const { name, email, phone, unit, message } = req.body;
   
@@ -49,8 +61,35 @@ functionsRouter.post('/lead', async (req, res) => {
     `;
     
     await pool.execute(query, [name, email, phone, unit, message]);
-    
     console.log('New lead saved to database:', { name, email });
+
+    // Send Email to Manager
+    const mailOptions = {
+      from: `"MB City Web Service" <${process.env.EMAIL_USER}>`,
+      to: process.env.MANAGER_EMAIL,
+      subject: `New Inquiry: ${name} - ${unit}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+          <h2 style="color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px;">New Interest Submission</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+          <p><strong>Preferred Unit:</strong> ${unit}</p>
+          <p><strong>Message:</strong></p>
+          <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; color: #555;">
+            ${message || 'No message provided.'}
+          </div>
+          <p style="margin-top: 20px; font-size: 12px; color: #999;">Received at: ${new Date().toLocaleString()}</p>
+        </div>
+      `,
+    };
+
+    // We don't await email to send response faster to user, 
+    // but we log the result
+    transporter.sendMail(mailOptions)
+      .then(info => console.log('Email sent to manager:', info.messageId))
+      .catch(err => console.error('Email error:', err));
+
     res.status(200).json({ success: true, message: 'Lead received and saved successfully' });
   } catch (error) {
     console.error('Database error:', error);

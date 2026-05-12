@@ -16,7 +16,9 @@ import {
   Award,
   Zap,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Globe,
+  Mail
 } from "lucide-react";
 import "./App.css";
 
@@ -81,6 +83,13 @@ export default function App() {
   const opacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.05], [1, 1.1]);
 
+  const contactInfo = {
+    phone: "+34 625 76 60 08",
+    whatsapp: "34625766008",
+    email: "info@dprealestate.org",
+    websites: ["www.dprealestate.org", "www.dprealestate.net"]
+  };
+
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => setNotification(null), 5000);
@@ -89,10 +98,10 @@ export default function App() {
   }, [notification]);
 
   const collections = [
-    { id: "iconic", name: "Vision Iconic", tower: "Tower 6", units: "1404", floors: "66" },
-    { id: "one-eleven", name: "Vision One-Eleven", tower: "Tower 7", units: "1366", floors: "60" },
-    { id: "maybach", name: "Project Maybach", tower: "Tower 1", units: "816", floors: "24" },
-    { id: "amg", name: "AMG Vision", tower: "Towers 8 & 9", units: "2692", floors: "52" }
+    { id: "iconic", name: "Vision Iconic", tower: "Tower 6", units: "1404", floors: "66", image: "/col-iconic-24.jpg" },
+    { id: "one-eleven", name: "Vision One-Eleven", tower: "Tower 7", units: "1366", floors: "60", image: "/col-one-eleven-51.jpg" },
+    { id: "maybach", name: "Project Maybach", tower: "Tower 1", units: "816", floors: "24", image: "/col-maybach-30.jpg" },
+    { id: "amg", name: "AMG Vision", tower: "Towers 8 & 9", units: "2692", floors: "52", image: "/col-amg-48.jpg" }
   ];
 
   const amenities = [
@@ -116,11 +125,7 @@ export default function App() {
       
       <AnimatePresence>
         {notification && (
-          <Notification 
-            type={notification.type} 
-            message={notification.message} 
-            onClose={() => setNotification(null)} 
-          />
+          <Notification type={notification.type} message={notification.message} onClose={() => setNotification(null)} />
         )}
       </AnimatePresence>
 
@@ -132,9 +137,9 @@ export default function App() {
               initial={{ rotate: -180, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
               transition={{ duration: 1 }}
-              className="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+              className="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)] overflow-hidden"
             >
-              <div className="w-6 h-6 border border-white/60 rounded-full" />
+              <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
             </motion.div>
             <div className="flex flex-col">
               <span className="text-[10px] tracking-[0.4em] uppercase text-white/60">Mercedes-Benz</span>
@@ -283,22 +288,22 @@ export default function App() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {collections.map((col, idx) => (
               <FadeIn key={col.id} delay={idx * 0.1}>
-                <div className="group relative bg-black border border-white/10 p-8 rounded-3xl hover:border-white/30 transition-all hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)]">
-                  <span className="text-[10px] uppercase tracking-widest text-white/40 mb-2 block">{col.tower}</span>
-                  <h3 className="text-xl font-medium mb-4">{col.name}</h3>
-                  <div className="space-y-2 mb-8">
-                    <div className="flex justify-between text-xs text-white/60">
-                      <span>Residential Units</span>
-                      <span className="text-white">{col.units}</span>
-                    </div>
-                    <div className="flex justify-between text-xs text-white/60">
-                      <span>Floors</span>
-                      <span className="text-white">{col.floors}</span>
-                    </div>
+                <div className="group relative bg-black border border-white/10 p-8 rounded-3xl hover:border-white/30 transition-all hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] overflow-hidden">
+                  <div className="absolute inset-0 z-0 opacity-40 group-hover:opacity-60 transition-opacity duration-700">
+                    <img src={col.image} alt={col.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                   </div>
-                  <div className="w-full h-40 bg-white/5 rounded-2xl overflow-hidden relative border border-white/5">
-                    <div className="absolute inset-0 bg-gradient-to-tr from-black/60 to-transparent" />
-                    <div className="absolute bottom-4 left-4 text-[10px] uppercase tracking-widest text-white/40">Blueprint Details</div>
+                  <div className="relative z-10">
+                    <span className="text-[10px] uppercase tracking-widest text-white/40 mb-2 block">{col.tower}</span>
+                    <h3 className="text-xl font-medium mb-4 group-hover:text-white transition-colors">{col.name}</h3>
+                    <div className="space-y-2 mb-8">
+                      <div className="flex justify-between text-xs text-white/60"><span>Units</span><span className="text-white">{col.units}</span></div>
+                      <div className="flex justify-between text-xs text-white/60"><span>Floors</span><span className="text-white">{col.floors}</span></div>
+                    </div>
+                    <div className="w-full h-32 bg-white/5 rounded-2xl overflow-hidden relative border border-white/5 backdrop-blur-sm">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-black/60 to-transparent" />
+                      <div className="absolute bottom-4 left-4 text-[10px] uppercase tracking-widest text-white/40 font-semibold">Premium Finish</div>
+                    </div>
                   </div>
                 </div>
               </FadeIn>
@@ -311,7 +316,6 @@ export default function App() {
       <section id="amenities" className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
           <SectionHeading subtitle="Exclusive Services" title="Engineered for Life" />
-          
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {amenities.map((item, idx) => (
               <FadeIn key={idx} delay={idx * 0.05}>
@@ -319,9 +323,7 @@ export default function App() {
                   <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white/80 group-hover:scale-110 transition-transform group-hover:text-white">
                     {item.icon}
                   </div>
-                  <span className="text-[10px] uppercase tracking-widest font-medium text-white/60 leading-tight">
-                    {item.label}
-                  </span>
+                  <span className="text-[10px] uppercase tracking-widest font-medium text-white/60 leading-tight">{item.label}</span>
                 </div>
               </FadeIn>
             ))}
@@ -337,41 +339,21 @@ export default function App() {
             <div>
               <FadeIn>
                 <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-6 font-medium">Nad Al Sheba District</p>
-                <h2 className="text-4xl md:text-5xl font-extralight mb-8 leading-tight">
-                  Next In The <br />
-                  <span className="text-white/40">City of Now</span>
-                </h2>
-                <p className="text-gray-400 text-lg font-light leading-relaxed mb-10">
-                  Strategically located at the junction of Dubai's drive and unique artistry. 
-                  The area is globally renowned for equestrian excellence and the iconic Meydan Racecourse.
-                </p>
-                
+                <h2 className="text-4xl md:text-5xl font-extralight mb-8 leading-tight">Next In The <br /><span className="text-white/40">City of Now</span></h2>
+                <p className="text-gray-400 text-lg font-light leading-relaxed mb-10">Strategically located at the junction of Dubai's drive and unique artistry. The area is globally renowned for equestrian excellence and the iconic Meydan Racecourse.</p>
                 <div className="grid grid-cols-2 gap-8">
-                  {[
-                    { time: "8 Minutes", place: "Dubai Mall / Burj Khalifa" },
-                    { time: "15 Minutes", place: "Dubai Intl Airport" },
-                    { time: "10 Minutes", place: "Business Bay" },
-                    { time: "20 Minutes", place: "Palm Jumeirah" }
-                  ].map((loc, idx) => (
+                  {[{ time: "8 Minutes", place: "Dubai Mall / Burj Khalifa" }, { time: "15 Minutes", place: "Dubai Intl Airport" }, { time: "10 Minutes", place: "Business Bay" }, { time: "20 Minutes", place: "Palm Jumeirah" }].map((loc, idx) => (
                     <div key={idx} className="space-y-1 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-colors">
-                      <div className="flex items-center gap-2 text-white/60">
-                        <Clock size={14} /> <span className="text-[10px] uppercase tracking-widest">{loc.time}</span>
-                      </div>
+                      <div className="flex items-center gap-2 text-white/60"><Clock size={14} /> <span className="text-[10px] uppercase tracking-widest">{loc.time}</span></div>
                       <p className="text-sm font-medium">{loc.place}</p>
                     </div>
                   ))}
                 </div>
               </FadeIn>
             </div>
-            
             <FadeIn delay={0.3}>
               <div className="relative h-[500px] rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_60px_rgba(255,255,255,0.05)]">
-                <iframe
-                  title="Mercedes-Benz Places Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d137513.5444096678!2d55.31223936810359!3d25.08212905656814!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f67b9e2599107%3A0x4a9e775524bcf3ec!2sMercedes-Benz%20Places%20%7C%20Binghatti%20City!5e0!3m2!1sen!2sae!4v1767957272068!5m2!1sen!2sae"
-                  className="w-full h-full border-0 grayscale invert opacity-80 hover:opacity-100 transition-opacity"
-                  loading="lazy"
-                />
+                <iframe title="Location" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d137513.5444096678!2d55.31223936810359!3d25.08212905656814!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f67b9e2599107%3A0x4a9e775524bcf3ec!2sMercedes-Benz%20Places%20%7C%20Binghatti%20City!5e0!3m2!1sen!2sae!4v1767957272068!5m2!1sen!2sae" className="w-full h-full border-0 grayscale invert opacity-80" loading="lazy" />
               </div>
             </FadeIn>
           </div>
@@ -382,65 +364,26 @@ export default function App() {
       <section id="inquiry" className="py-32 px-6 relative">
         <div className="max-w-4xl mx-auto bg-white/[0.03] border border-white/10 rounded-[40px] p-8 md:p-16 relative overflow-hidden shadow-[0_0_100px_rgba(255,255,255,0.03)]">
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
-          
           <div className="relative z-10">
             <SectionHeading subtitle="Secure Your Place" title="Inquire for Availability" />
-            
-            <form 
-              className="grid md:grid-cols-2 gap-6"
-              onSubmit={async e => {
+            <form className="grid md:grid-cols-2 gap-6" onSubmit={async e => {
                 e.preventDefault();
                 setIsSubmitting(true);
-                const formData = new FormData(e.target);
-                const payload = Object.fromEntries(formData);
+                const payload = Object.fromEntries(new FormData(e.target));
                 try {
                   await axios.post("/.netlify/functions/lead", payload);
-                  setNotification({
-                    type: 'success',
-                    message: "Your interest has been registered. Our concierge will contact you shortly."
-                  });
+                  setNotification({ type: 'success', message: "Your interest has been registered. Our concierge will contact you shortly." });
                   e.target.reset();
                 } catch (err) {
-                  setNotification({
-                    type: 'error',
-                    message: "Connection lost. Please check your network and try again."
-                  });
-                } finally {
-                  setIsSubmitting(false);
-                }
-              }}
-            >
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Full Name</label>
-                <input required name="name" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/40 transition-colors" placeholder="John Doe" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Email Address</label>
-                <input required name="email" type="email" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/40 transition-colors" placeholder="john@example.com" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Phone</label>
-                <input name="phone" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/40 transition-colors" placeholder="+971" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Preferred Unit</label>
-                <select name="unit" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/40 transition-colors appearance-none">
-                  <option className="bg-black">Studio</option>
-                  <option className="bg-black">1 Bedroom</option>
-                  <option className="bg-black">2 Bedroom</option>
-                  <option className="bg-black">3+ Bedroom</option>
-                </select>
-              </div>
-              <div className="md:col-span-2 space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Message</label>
-                <textarea rows="4" name="message" className="w-full bg-white/5 border border-white/10 rounded-3xl px-6 py-4 outline-none focus:border-white/40 transition-colors resize-none" placeholder="How can we assist you?" />
-              </div>
-              <button 
-                disabled={isSubmitting}
-                className="md:col-span-2 mt-4 py-5 bg-white text-black text-xs uppercase tracking-[0.4em] font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? "Processing..." : "Submit Interest"}
-              </button>
+                  setNotification({ type: 'error', message: "Error submitting request. Please try again." });
+                } finally { setIsSubmitting(false); }
+              }}>
+              <div className="space-y-1"><label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Full Name</label><input required name="name" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/40 transition-colors" placeholder="John Doe" /></div>
+              <div className="space-y-1"><label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Email Address</label><input required name="email" type="email" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/40 transition-colors" placeholder={contactInfo.email} /></div>
+              <div className="space-y-1"><label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Phone</label><input name="phone" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/40 transition-colors" placeholder={contactInfo.phone} /></div>
+              <div className="space-y-1"><label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Preferred Unit</label><select name="unit" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/40 appearance-none"><option className="bg-black">Studio</option><option className="bg-black">1 Bedroom</option><option className="bg-black">2 Bedroom</option><option className="bg-black">3+ Bedroom</option></select></div>
+              <div className="md:col-span-2 space-y-1"><label className="text-[10px] uppercase tracking-widest text-white/40 ml-1">Message</label><textarea rows="4" name="message" className="w-full bg-white/5 border border-white/10 rounded-3xl px-6 py-4 outline-none focus:border-white/40 resize-none" placeholder="How can we assist you?" /></div>
+              <button disabled={isSubmitting} className="md:col-span-2 mt-4 py-5 bg-white text-black text-xs uppercase tracking-[0.4em] font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)] disabled:opacity-50">{isSubmitting ? "Processing..." : "Submit Interest"}</button>
             </form>
           </div>
         </div>
@@ -451,64 +394,48 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12">
           <div className="md:col-span-2 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 border border-white/20 rounded-full flex items-center justify-center">
-                <div className="w-4 h-4 border border-white/60 rounded-full" />
+              <div className="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center overflow-hidden">
+                <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
               </div>
               <span className="text-xs font-semibold tracking-widest uppercase">Places | Binghatti</span>
             </div>
-            <p className="text-gray-500 text-sm max-w-sm font-light">
-              The world's first Mercedes-Benz branded city, bringing architectural excellence and 
-              unmatched luxury to the heart of Dubai's Meydan district.
-            </p>
+            <p className="text-gray-500 text-sm max-w-sm font-light">The world's first Mercedes-Benz branded city, bringing architectural excellence and unmatched luxury to Dubai's Meydan district.</p>
+            <div className="flex flex-col gap-3 text-sm text-white/60">
+              <div className="flex items-center gap-3"><Mail size={16} /> <span>{contactInfo.email}</span></div>
+              <div className="flex items-center gap-3"><Phone size={16} /> <span>{contactInfo.phone}</span></div>
+            </div>
             <div className="flex gap-4">
-              <button className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"><Phone size={18} /></button>
-              <button className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"><MessageCircle size={18} /></button>
-              <button className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"><Download size={18} /></button>
+              <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"><Phone size={18} /></a>
+              <a href={`https://wa.me/${contactInfo.whatsapp}`} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"><MessageCircle size={18} /></a>
             </div>
           </div>
-          
           <div>
             <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/80 mb-6">Collections</h4>
-            <ul className="space-y-3 text-sm text-gray-500 font-light">
-              {collections.map(c => <li key={c.id} className="hover:text-white cursor-pointer transition-colors">{c.name}</li>)}
-            </ul>
+            <ul className="space-y-3 text-sm text-gray-500 font-light">{collections.map(c => <li key={c.id}>{c.name}</li>)}</ul>
           </div>
-
           <div>
-            <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/80 mb-6">Experience</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/80 mb-6">Official Websites</h4>
             <ul className="space-y-3 text-sm text-gray-500 font-light">
-              <li className="hover:text-white cursor-pointer transition-colors">Design Philosophy</li>
-              <li className="hover:text-white cursor-pointer transition-colors">Lifestyle Curations</li>
-              <li className="hover:text-white cursor-pointer transition-colors">Digital Brochure</li>
-              <li className="hover:text-white cursor-pointer transition-colors">Site Progress</li>
+              {contactInfo.websites.map(site => (
+                <li key={site}><a href={`https://${site}`} target="_blank" rel="noreferrer" className="hover:text-white flex items-center gap-2 transition-colors"><Globe size={14} /> {site}</a></li>
+              ))}
             </ul>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-6 text-[10px] uppercase tracking-[0.2em] text-gray-600">
-          <span>© 2026 Mercedes-Benz Places | Binghatti City. All rights reserved.</span>
-          <div className="flex gap-8">
-            <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
-            <span className="hover:text-white cursor-pointer transition-colors">Terms of Service</span>
-          </div>
+          <span>© 2026 DP Real Estate. All rights reserved.</span>
+          <div className="flex gap-8"><span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span><span className="hover:text-white cursor-pointer transition-colors">Terms of Service</span></div>
         </div>
       </footer>
 
       {/* Fixed Contact Icons */}
       <div className="fixed bottom-10 right-10 z-40 flex flex-col gap-4">
-        <motion.button 
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl"
-        >
+        <motion.a whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl">
           <Phone size={24} />
-        </motion.button>
-        <motion.button 
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl"
-        >
+        </motion.a>
+        <motion.a whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} href={`https://wa.me/${contactInfo.whatsapp}`} target="_blank" rel="noreferrer" className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl">
           <MessageCircle size={24} />
-        </motion.button>
+        </motion.a>
       </div>
 
     </div>

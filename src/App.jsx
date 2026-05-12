@@ -102,9 +102,84 @@ const PhoneModal = ({ isOpen, onClose, phone }) => (
   </AnimatePresence>
 );
 
+const CollectionModal = ({ isOpen, onClose, collection }) => {
+  if (!collection) return null;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-xl" />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 20 }} 
+            animate={{ opacity: 1, scale: 1, y: 0 }} 
+            exit={{ opacity: 0, scale: 0.9, y: 20 }} 
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] w-[95%] max-w-4xl max-h-[90vh] overflow-y-auto bg-black border border-white/10 rounded-[40px] p-8 md:p-12 shadow-[0_0_100px_rgba(255,255,255,0.1)] custom-scrollbar"
+          >
+            <button onClick={onClose} className="absolute top-8 right-8 p-2 rounded-full hover:bg-white/5 transition-colors z-50"><X size={24} className="text-white/40" /></button>
+
+            <div className="grid lg:grid-cols-2 gap-12">
+              <div className="relative aspect-square lg:aspect-auto rounded-3xl overflow-hidden border border-white/10 min-h-[400px]">
+                <img src={collection.image} alt={collection.name} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                <div className="absolute bottom-8 left-8">
+                  <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-2">{collection.tower}</p>
+                  <h3 className="text-4xl font-light text-white tracking-tight">{collection.name}</h3>
+                </div>
+              </div>
+
+              <div className="flex flex-col">
+                <p className="text-[10px] uppercase tracking-[0.5em] text-white/40 mb-8 font-medium">Project Specifications</p>
+
+                <div className="space-y-8">
+                  <div className="grid grid-cols-2 gap-8">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Property Type</p>
+                      <p className="text-sm font-light text-white/90">{collection.facts.type}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Plot Area</p>
+                      <p className="text-sm font-light text-white/90">{collection.facts.plot}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Architectural Composition</p>
+                    <p className="text-sm font-light text-white/80 leading-relaxed">{collection.facts.levels}</p>
+                  </div>
+
+                  <div className="pt-8 border-t border-white/10">
+                    <p className="text-[10px] uppercase tracking-widest text-white/30 mb-6">Unit Distribution</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                      {Object.entries(collection.facts.units).map(([key, val]) => (
+                        <div key={key}>
+                          <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1">
+                            {key.replace('bed', ' Bedroom').replace('shops', 'Retail Shops').replace('studio', 'Studio')}
+                          </p>
+                          <p className="text-xl font-light text-white">{val}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-12 lg:mt-auto pt-12 flex items-center gap-6">
+                  <button onClick={() => { onClose(); document.getElementById('inquiry').scrollIntoView({ behavior: 'smooth' }); }} className="flex-1 py-4 bg-white text-black rounded-2xl text-[10px] uppercase tracking-widest font-bold hover:bg-gray-200 transition-all shadow-xl">Inquire Now</button>
+                  <button onClick={onClose} className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl text-[10px] uppercase tracking-widest font-bold hover:bg-white/10 transition-all">Close</button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
+  const [selectedCollection, setSelectedCollection] = useState(null);
   const [notification, setNotification] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { scrollYProgress } = useScroll();
@@ -126,88 +201,135 @@ export default function App() {
   }, [notification]);
 
   const collections = [
-    {
-      id: "maybach",
-      name: "Project Maybach",
-      tower: "Tower 1",
-      units: "816",
-      floors: "24 Residential",
+    { 
+      id: "maybach", 
+      name: "Project Maybach", 
+      tower: "Tower 1", 
+      units: "816", 
+      floors: "24 Residential", 
       area: "8,763 SQM",
       image: "/col-maybach-30.jpg",
-      highlight: "Off-Road Luxury"
+      highlight: "Off-Road Luxury",
+      facts: {
+        type: "Residential & Retails",
+        plot: "8,763.69 SQM / 94,332 SQFT",
+        levels: "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 24 Residential Floors + Mechanical Floors + Roof",
+        units: { studio: 608, bed1: 76, bed2: 92, bed3: 40, shops: 15 }
+      }
     },
-    {
-      id: "ultimate-luxury",
-      name: "Ultimate Luxury",
-      tower: "Towers 2 & 3",
-      units: "1,204",
-      floors: "24 Residential",
+    { 
+      id: "ultimate-luxury", 
+      name: "Ultimate Luxury", 
+      tower: "Towers 2 & 3", 
+      units: "1,204", 
+      floors: "24 Residential", 
       area: "14,220 SQM",
       image: "/col-luxury-34.jpg",
-      highlight: "Curated Excellence"
+      highlight: "Curated Excellence",
+      facts: {
+        type: "Residential & Retails",
+        plot: "14,220.38 SQM / 153,067 SQFT",
+        levels: "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 19/24 Residential Floors + Mechanical Floors + Roof",
+        units: { studio: 864, bed1: 140, bed2: 140, bed3: 60, shops: 28 }
+      }
     },
-    {
-      id: "maybach6",
-      name: "Vision Maybach 6",
-      tower: "Towers 4 & 5",
-      units: "1,844",
-      floors: "34 Residential",
+    { 
+      id: "maybach6", 
+      name: "Vision Maybach 6", 
+      tower: "Towers 4 & 5", 
+      units: "1,844", 
+      floors: "34 Residential", 
       area: "14,325 SQM",
       image: "/col-maybach6-37.jpg",
-      highlight: "Ultimate Sophistication"
+      highlight: "Ultimate Sophistication",
+      facts: {
+        type: "Residential & Retails",
+        plot: "14,325.92 SQM / 154,203 SQFT",
+        levels: "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 29/34 Residential Floors + 2 Mechanical Floors + Roof",
+        units: { studio: 1344, bed1: 220, bed2: 220, bed3: 60, shops: 34 }
+      }
     },
-    {
-      id: "iconic",
-      name: "Vision Iconic",
-      tower: "Tower 6",
-      units: "1,404",
-      floors: "66 Residential",
+    { 
+      id: "iconic", 
+      name: "Vision Iconic", 
+      tower: "Tower 6", 
+      units: "1,404", 
+      floors: "66 Residential", 
       area: "22,282 SQM",
       image: "/col-iconic-24.jpg",
-      highlight: "66 Floors of Pure Luxury"
+      highlight: "66 Floors of Pure Luxury",
+      facts: {
+        type: "Residential & Retails",
+        plot: "22,282.20 SQM / 239,846 SQFT",
+        levels: "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 66 Residential Floors + 9 Mechanical Floors + Roof",
+        units: { bed1: 1001, bed2: 277, bed3: 108, bed4: 9, bed5: 9, shops: 21 }
+      }
     },
-    {
-      id: "one-eleven",
-      name: "Vision One-Eleven",
-      tower: "Tower 7",
-      units: "1,366",
-      floors: "60 Residential",
+    { 
+      id: "one-eleven", 
+      name: "Vision One-Eleven", 
+      tower: "Tower 7", 
+      units: "1,366", 
+      floors: "60 Residential", 
       area: "7,901 SQM",
       image: "/col-one-eleven-51.jpg",
-      highlight: "Iconic Proportions"
+      highlight: "Iconic Proportions",
+      facts: {
+        type: "Residential & Retails",
+        plot: "7,901.03 SQM / 85,047 SQFT",
+        levels: "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 60 Residential Floors + 4 Mechanical Floors + Roof",
+        units: { bed1: 1080, bed2: 236, bed3: 50, shops: 18 }
+      }
     },
-    {
-      id: "amg",
-      name: "AMG Vision",
-      tower: "Towers 8 & 9",
-      units: "2,692",
-      floors: "52 Residential",
+    { 
+      id: "amg", 
+      name: "AMG Vision", 
+      tower: "Towers 8 & 9", 
+      units: "2,692", 
+      floors: "52 Residential", 
       area: "11,626 SQM",
       image: "/col-amg-48.jpg",
-      highlight: "High-Performance Living"
+      highlight: "High-Performance Living",
+      facts: {
+        type: "Residential & Retails",
+        plot: "11,626.97 SQM / 125,153 SQFT",
+        levels: "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 47/52 Residential Floors + 4 Mechanical Rooms + Roof",
+        units: { studio: 1112, bed1: 1344, bed2: 236, shops: 35 }
+      }
     },
-    {
-      id: "avtr",
-      name: "VISION AVTR",
-      tower: "Tower 10",
-      units: "1,280",
-      floors: "41 Residential",
+    { 
+      id: "avtr", 
+      name: "VISION AVTR", 
+      tower: "Tower 10", 
+      units: "1,280", 
+      floors: "41 Residential", 
       area: "12,835 SQM",
       image: "/col-avtr-44.jpg",
-      highlight: "Futuristic Design"
+      highlight: "Futuristic Design",
+      facts: {
+        type: "Residential & Retails",
+        plot: "12,835.93 SQM / 138,166 SQFT",
+        levels: "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 41 Residential Floors + 2 Mechanical Floors + Roof",
+        units: { studio: 640, bed1: 480, bed2: 160, shops: 23 }
+      }
     },
-    {
-      id: "simplex",
-      name: "Vision Simplex",
-      tower: "Towers 11 & 12",
-      units: "2,208",
-      floors: "35 Residential",
+    { 
+      id: "simplex", 
+      name: "Vision Simplex", 
+      tower: "Towers 11 & 12", 
+      units: "2,208", 
+      floors: "35 Residential", 
       area: "11,359 SQM",
       image: "/col-simplex-41.jpg",
-      highlight: "Heritage Reimagined"
+      highlight: "Heritage Reimagined",
+      facts: {
+        type: "Residential & Retails",
+        plot: "11,359.06 SQM / 122,269 SQFT",
+        levels: "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 29/35 Residential Floors + 2 Mechanical Rooms + Roof",
+        units: { studio: 1440, bed1: 520, bed2: 248, shops: 34 }
+      }
     }
   ];
-
   const amenities = [
     { icon: <Zap size={20} />, label: "Solar Photovoltaic" },
     { icon: <Award size={20} />, label: "LEED Certification" },
@@ -234,6 +356,12 @@ export default function App() {
       </AnimatePresence>
 
       <PhoneModal isOpen={phoneModalOpen} onClose={() => setPhoneModalOpen(false)} phone={contactInfo.phone} />
+      
+      <CollectionModal 
+        isOpen={!!selectedCollection} 
+        onClose={() => setSelectedCollection(null)} 
+        collection={selectedCollection} 
+      />
 
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-white/10">
@@ -318,9 +446,12 @@ export default function App() {
                         <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">{col.tower}</p>
                         <h3 className="text-3xl font-light tracking-tight">{col.name}</h3>
                       </div>
-                      <div className="p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                        <Maximize2 size={16} className="text-white/40 group-hover:text-white transition-colors" />
-                      </div>
+                      <button 
+                        onClick={() => setSelectedCollection(col)}
+                        className="p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors group/btn"
+                      >
+                        <Maximize2 size={16} className="text-white/40 group-hover/btn:text-white transition-colors" />
+                      </button>
                     </div>
 
                     <p className="text-xs text-white/80 font-medium tracking-widest mb-10 border-l-2 border-white/20 pl-4 uppercase">
@@ -348,9 +479,17 @@ export default function App() {
                           <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1">Plot Area</p>
                           <p className="text-xs font-semibold text-white/90">{col.area}</p>
                         </div>
-                        <button onClick={() => scrollToSection('inquiry')} className="p-4 rounded-full bg-white text-black hover:scale-110 transition-transform shadow-xl">
-                          <ChevronRight size={20} />
-                        </button>
+                        <div className="flex gap-3">
+                           <button 
+                             onClick={() => setSelectedCollection(col)}
+                             className="px-6 py-3 rounded-full bg-white/5 border border-white/10 text-[9px] uppercase tracking-widest font-bold hover:bg-white/10 transition-all"
+                           >
+                             Details
+                           </button>
+                           {/* <button onClick={() => scrollToSection('inquiry')} className="p-3 rounded-full bg-white text-black hover:scale-110 transition-transform shadow-xl">
+                             <ChevronRight size={18} />
+                           </button> */}
+                        </div>
                       </div>
                     </div>
                   </div>

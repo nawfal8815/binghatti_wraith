@@ -18,7 +18,9 @@ import {
   CheckCircle2,
   AlertCircle,
   Globe,
-  Mail
+  Mail,
+  ExternalLink,
+  Copy
 } from "lucide-react";
 import "./App.css";
 
@@ -75,8 +77,61 @@ const Notification = ({ type, message, onClose }) => (
   </motion.div>
 );
 
+const PhoneModal = ({ isOpen, onClose, phone }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm"
+        />
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] w-[90%] max-w-md bg-black border border-white/10 rounded-[40px] p-10 shadow-[0_0_100px_rgba(255,255,255,0.1)]"
+        >
+          <button onClick={onClose} className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 transition-colors">
+            <X size={24} className="text-white/40" />
+          </button>
+          
+          <div className="flex flex-col items-center text-center">
+            <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-8 border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+              <Phone size={32} className="text-white" />
+            </div>
+            <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-2">Direct Contact</p>
+            <h3 className="text-3xl font-light text-white mb-8 tracking-tight">{phone}</h3>
+            
+            <div className="grid grid-cols-2 gap-4 w-full">
+              <a 
+                href={`tel:${phone.replace(/\s/g, '')}`}
+                className="flex items-center justify-center gap-3 py-4 bg-white text-black rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-gray-200 transition-all"
+              >
+                <Phone size={16} /> Call Now
+              </a>
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(phone);
+                  alert("Phone number copied to clipboard");
+                }}
+                className="flex items-center justify-center gap-3 py-4 bg-white/5 text-white border border-white/10 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-white/10 transition-all"
+              >
+                <Copy size={16} /> Copy
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
+);
+
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [phoneModalOpen, setPhoneModalOpen] = useState(false);
   const [notification, setNotification] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { scrollYProgress } = useScroll();
@@ -129,6 +184,8 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      <PhoneModal isOpen={phoneModalOpen} onClose={() => setPhoneModalOpen(false)} phone={contactInfo.phone} />
+
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -142,6 +199,7 @@ export default function App() {
               <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
             </motion.div>
             <div className="flex flex-col">
+              <span className="text-xl font-semibold tracking-widest uppercase">DP REAL ESTATE</span>
               <span className="text-[10px] tracking-[0.4em] uppercase text-white/60">Mercedes-Benz</span>
               <span className="text-xs font-semibold tracking-widest uppercase">Places | Binghatti</span>
             </div>
@@ -397,6 +455,7 @@ export default function App() {
               <div className="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center overflow-hidden">
                 <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
               </div>
+              <span className="text-xl font-semibold tracking-widest uppercase">DP REAL ESTATE</span>
               <span className="text-xs font-semibold tracking-widest uppercase">Places | Binghatti</span>
             </div>
             <p className="text-gray-500 text-sm max-w-sm font-light">The world's first Mercedes-Benz branded city, bringing architectural excellence and unmatched luxury to Dubai's Meydan district.</p>
@@ -405,7 +464,7 @@ export default function App() {
               <div className="flex items-center gap-3"><Phone size={16} /> <span>{contactInfo.phone}</span></div>
             </div>
             <div className="flex gap-4">
-              <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"><Phone size={18} /></a>
+              <button onClick={() => setPhoneModalOpen(true)} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"><Phone size={18} /></button>
               <a href={`https://wa.me/${contactInfo.whatsapp}`} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"><MessageCircle size={18} /></a>
             </div>
           </div>
@@ -430,9 +489,9 @@ export default function App() {
 
       {/* Fixed Contact Icons */}
       <div className="fixed bottom-10 right-10 z-40 flex flex-col gap-4">
-        <motion.a whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl">
+        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => setPhoneModalOpen(true)} className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl">
           <Phone size={24} />
-        </motion.a>
+        </motion.button>
         <motion.a whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} href={`https://wa.me/${contactInfo.whatsapp}`} target="_blank" rel="noreferrer" className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl">
           <MessageCircle size={24} />
         </motion.a>

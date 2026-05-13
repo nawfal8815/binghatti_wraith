@@ -50,10 +50,10 @@ const FadeIn = ({ children, delay = 0, direction = "up" }) => {
       animate={
         isInView
           ? {
-              opacity: 1,
-              y: 0,
-              x: 0
-            }
+            opacity: 1,
+            y: 0,
+            x: 0
+          }
           : {}
       }
       transition={{
@@ -74,9 +74,8 @@ const SectionHeading = ({ subtitle, title, light = false }) => (
       whileInView={{ opacity: 1, letterSpacing: "0.42em", y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.8 }}
-      className={`text-[10px] uppercase font-light mb-4 ${
-        light ? "text-white/60" : "text-gray-400"
-      }`}
+      className={`text-[10px] uppercase font-light mb-4 ${light ? "text-white/60" : "text-gray-400"
+        }`}
     >
       {subtitle}
     </motion.p>
@@ -99,10 +98,9 @@ const Notification = ({ type, message, onClose }) => (
     exit={{ opacity: 0, y: 20, scale: 0.95 }}
     transition={{ duration: 0.25 }}
     className={`fixed bottom-32 left-1/2 -translate-x-1/2 z-[100] px-8 py-4 rounded-2xl border backdrop-blur-2xl flex items-center gap-4 shadow-[0_0_40px_rgba(0,0,0,0.6)] min-w-[320px]
-      ${
-        type === "success"
-          ? "bg-black/80 border-emerald-400/30 text-emerald-100"
-          : "bg-black/80 border-red-500/40 text-red-200"
+      ${type === "success"
+        ? "bg-black/80 border-emerald-400/30 text-emerald-100"
+        : "bg-black/80 border-red-500/40 text-red-200"
       }`}
   >
     {type === "success" ? (
@@ -185,123 +183,171 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: 0.9 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md"
           />
+
+          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 24 }}
+            exit={{ opacity: 0, scale: 0.95, y: 24 }}
             transition={{ duration: 0.35, ease: [0.17, 0.67, 0.3, 0.99] }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] w-[95%] max-w-4xl max-h-[90vh] overflow-y-auto bg-black border border-white/10 rounded-[40px] p-8 md:p-12 shadow-[0_0_160px_rgba(0,0,0,0.95)] custom-scrollbar"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                       z-[101] w-[96%] max-w-5xl max-h-[92vh] overflow-y-auto
+                       bg-black border border-white/12 rounded-[40px] p-8 md:p-10
+                       shadow-[0_0_160px_rgba(0,0,0,1)] custom-scrollbar"
           >
+            {/* Close */}
             <button
               onClick={onClose}
-              className="absolute top-8 right-8 p-2 rounded-full hover:bg-white/5 transition-colors z-50"
+              className="absolute top-7 right-7 p-2 rounded-full hover:bg-white/5 transition-colors z-50"
             >
-              <X size={24} className="text-white/40" />
+              <X size={26} className="text-white/50" />
             </button>
 
-            <div className="grid lg:grid-cols-2 gap-12">
-              <div className="relative aspect-square lg:aspect-auto rounded-3xl overflow-hidden border border-white/10 min-h-[400px]">
+            <div className="grid lg:grid-cols-2 gap-10">
+              {/* Left: large image + title */}
+              <div className="relative rounded-3xl overflow-hidden border border-white/12 min-h-[360px] lg:min-h-[420px]">
                 <motion.img
-                  initial={{ scale: 1.05 }}
+                  initial={{ scale: 1.06 }}
                   animate={{ scale: 1 }}
-                  transition={{
-                    duration: 0.9,
-                    ease: [0.19, 0.51, 0.23, 0.99]
-                  }}
+                  transition={{ duration: 1, ease: [0.19, 0.51, 0.23, 0.99] }}
                   src={collection.image}
                   alt={collection.name}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                <div className="absolute bottom-8 left-8">
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-2">
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+
+                <div className="absolute top-6 left-6">
+                  <p className="text-[11px] uppercase tracking-[0.32em] text-white/60 mb-2">
                     {collection.tower}
                   </p>
-                  <h3 className="text-4xl font-light text-white tracking-tight">
+                  <h3 className="text-3xl md:text-4xl font-light text-white tracking-tight">
                     {collection.name}
                   </h3>
                 </div>
+
+                <div className="absolute bottom-6 left-6 flex flex-wrap gap-3">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-[11px] uppercase tracking-[0.26em] text-white/90">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                    {collection.highlight}
+                  </span>
+                </div>
               </div>
 
+              {/* Right: specs & unit mix */}
               <div className="flex flex-col">
-                <p className="text-[10px] uppercase tracking-[0.5em] text-white/40 mb-8 font-medium">
-                  Project Specifications
+                {/* Section label */}
+                <p className="text-[11px] uppercase tracking-[0.4em] text-white/45 mb-6">
+                  Project Facts
                 </p>
 
-                <div className="space-y-8">
-                  <div className="grid grid-cols-2 gap-8">
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.26em] text-white/30 mb-2">
-                        Property Type
-                      </p>
-                      <p className="text-sm font-light text-white/90">
-                        {collection.facts.type}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.26em] text-white/30 mb-2">
-                        Plot Area
-                      </p>
-                      <p className="text-sm font-light text-white/90">
-                        {collection.facts.plot}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.26em] text-white/30 mb-2">
-                      Architectural Composition
+                {/* High-level stats */}
+                <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+                  <div className="rounded-2xl bg-white/4 border border-white/15 p-4">
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-white/45 mb-1.5">
+                      Property Type
                     </p>
-                    <p className="text-sm font-light text-white/80 leading-relaxed">
-                      {collection.facts.levels}
+                    <p className="text-sm md:text-base font-light text-white/95">
+                      {collection.facts.type}
                     </p>
                   </div>
-
-                  <div className="pt-8 border-top border-white/10">
-                    <p className="text-[10px] uppercase tracking-[0.26em] text-white/30 mb-6">
-                      Unit Distribution
+                  <div className="rounded-2xl bg-white/4 border border-white/15 p-4">
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-white/45 mb-1.5">
+                      Plot Area
                     </p>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-                      {Object.entries(collection.facts.units).map(
-                        ([key, val]) => (
-                          <div key={key}>
-                            <p className="text-[9px] uppercase tracking-[0.26em] text-white/40 mb-1">
-                              {key
-                                .replace("bed", " Bedroom")
-                                .replace("shops", "Retail Shops")
-                                .replace("studio", "Studio")}
-                            </p>
-                            <p className="text-xl font-light text-white">
-                              {val}
-                            </p>
-                          </div>
-                        )
-                      )}
-                    </div>
+                    <p className="text-sm md:text-base font-light text-white/95">
+                      {collection.facts.plot}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl bg-white/4 border border-white/15 p-4">
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-white/45 mb-1.5">
+                      Total Units
+                    </p>
+                    <p className="text-2xl font-semibold text-white">
+                      {collection.units}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl bg-white/4 border border-white/15 p-4">
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-white/45 mb-1.5">
+                      Residential Floors
+                    </p>
+                    <p className="text-sm md:text-base font-medium text-white/95">
+                      {collection.floors}
+                    </p>
                   </div>
                 </div>
 
-                <div className="mt-12 lg:mt-auto pt-12 flex items-center gap-6">
+                {/* Levels description */}
+                <div className="mb-8">
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-white/45 mb-2">
+                    Architectural Composition
+                  </p>
+                  <p className="text-sm md:text-[15px] font-light text-white/80 leading-relaxed">
+                    {collection.facts.levels}
+                  </p>
+                </div>
+
+                {/* Unit mix – much clearer */}
+                <div className="mb-8">
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-white/45 mb-3">
+                    Unit Distribution
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {Object.entries(collection.facts.units).map(
+                      ([key, val]) => {
+                        const label = key
+                          .replace("studio", "Studio")
+                          .replace("bed1", "1 Bedroom")
+                          .replace("bed2", "2 Bedroom")
+                          .replace("bed3", "3 Bedroom")
+                          .replace("bed4", "4 Bedroom")
+                          .replace("bed5", "5 Bedroom")
+                          .replace("shops", "Retail Shops");
+
+                        return (
+                          <div
+                            key={key}
+                            className="rounded-2xl bg-white/5 border border-white/16 px-3.5 py-3 flex flex-col gap-1"
+                          >
+                            <span className="text-[10px] uppercase tracking-[0.24em] text-white/60">
+                              {label}
+                            </span>
+                            <span className="text-xl font-semibold text-white">
+                              {val}
+                            </span>
+                          </div>
+                        );
+                      }
+                    )}
+                  </div>
+                </div>
+
+                {/* CTA buttons */}
+                <div className="mt-auto pt-4 flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={() => {
                       onClose();
                       const el = document.getElementById("inquiry");
                       if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="flex-1 py-4 bg-white text-black rounded-2xl text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-gray-200 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                    className="flex-1 py-4 bg-white text-black rounded-2xl text-[11px] uppercase
+                               tracking-[0.32em] font-bold hover:bg-gray-200 transition-all
+                               shadow-[0_0_30px_rgba(255,255,255,0.25)]"
                   >
-                    Inquire Now
+                    Register Interest
                   </button>
                   <button
                     onClick={onClose}
-                    className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-white/10 transition-all"
+                    className="px-8 py-4 bg-white/5 border border-white/18 text-white rounded-2xl
+                               text-[11px] uppercase tracking-[0.3em] font-medium hover:bg-white/10
+                               transition-all"
                   >
                     Close
                   </button>
@@ -347,51 +393,70 @@ export default function App() {
       id: "maybach",
       name: "Project Maybach",
       tower: "Tower 1",
-      units: "816",
-      floors: "24 Residential",
-      area: "8,763 SQM",
+      units: "816", // total residential units
+      floors: "24 Residential", // + parking, basement, roof as per description
+      area: "8,763.69 SQM",
       image: "/col-maybach-30.jpg",
       highlight: "Off-Road Luxury",
       facts: {
         type: "Residential & Retails",
-        plot: "8,763.69 SQM / 94,332 SQFT",
+        plot: "8,763.69 SQM / 94,332 SQFT", // from PDF Project Facts page-30 [file:118]
         levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 24 Residential Floors + Mechanical Floors + Roof",
-        units: { studio: 608, bed1: 76, bed2: 92, bed3: 40, shops: 15 }
+          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 24 Residential Floors + Mechanical Floors + Roof", // [file:118]
+        units: {
+          studio: 608,
+          bed1: 76,
+          bed2: 92,
+          bed3: 40,
+          // no explicit 4/5-bed listed for this tower in Project Facts [file:118]
+          shops: 15
+        }
       }
     },
     {
       id: "ultimate-luxury",
-      name: "Ultimate Luxury",
+      name: "Vision Mercedes-Maybach Ultimate Luxury",
       tower: "Towers 2 & 3",
       units: "1,204",
-      floors: "24 Residential",
-      area: "14,220 SQM",
+      floors: "19 / 24 Residential", // one tower 19, one 24 [file:118]
+      area: "14,220.38 SQM",
       image: "/col-luxury-34.jpg",
       highlight: "Curated Excellence",
       facts: {
         type: "Residential & Retails",
-        plot: "14,220.38 SQM / 153,067 SQFT",
+        plot: "14,220.38 SQM / 153,067 SQFT", // page-34 [file:118]
         levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 19/24 Residential Floors + Mechanical Floors + Roof",
-        units: { studio: 864, bed1: 140, bed2: 140, bed3: 60, shops: 28 }
+          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 19 Residential Floors + 24 Residential Floors + Mechanical Floors + Roof", // [file:118]
+        units: {
+          studio: 864,
+          bed1: 140,
+          bed2: 140,
+          bed3: 60,
+          shops: 28
+        }
       }
     },
     {
       id: "maybach6",
-      name: "Vision Maybach 6",
+      name: "Vision Mercedes-Maybach 6",
       tower: "Towers 4 & 5",
       units: "1,844",
-      floors: "34 Residential",
-      area: "14,325 SQM",
+      floors: "29 / 34 Residential",
+      area: "14,325.92 SQM",
       image: "/col-maybach6-37.jpg",
       highlight: "Ultimate Sophistication",
       facts: {
         type: "Residential & Retails",
-        plot: "14,325.92 SQM / 154,203 SQFT",
+        plot: "14,325.92 SQM / 154,203 SQFT", // page-37 [file:118]
         levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 29/34 Residential Floors + 2 Mechanical Floors + Roof",
-        units: { studio: 1344, bed1: 220, bed2: 220, bed3: 60, shops: 34 }
+          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 29 Residential Floors + 34 Residential Floors + 2 Mechanical Floors + Roof", // [file:118]
+        units: {
+          studio: 1344,
+          bed1: 220,
+          bed2: 220,
+          bed3: 60,
+          shops: 34
+        }
       }
     },
     {
@@ -400,15 +465,22 @@ export default function App() {
       tower: "Tower 6",
       units: "1,404",
       floors: "66 Residential",
-      area: "22,282 SQM",
+      area: "22,282.20 SQM",
       image: "/col-iconic-24.jpg",
       highlight: "66 Floors of Pure Luxury",
       facts: {
         type: "Residential & Retails",
-        plot: "22,282.20 SQM / 239,846 SQFT",
+        plot: "22,282.20 SQM / 239,846 SQFT", // page-24 [file:118]
         levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 66 Residential Floors + 9 Mechanical Floors + Roof",
-        units: { bed1: 1001, bed2: 277, bed3: 108, bed4: 9, bed5: 9, shops: 21 }
+          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 66 Residential Floors + 9 Mechanical Floors + Roof", // [file:118]
+        units: {
+          bed1: 1001,
+          bed2: 277,
+          bed3: 108,
+          bed4: 9,
+          bed5: 9,
+          shops: 21
+        }
       }
     },
     {
@@ -417,32 +489,42 @@ export default function App() {
       tower: "Tower 7",
       units: "1,366",
       floors: "60 Residential",
-      area: "7,901 SQM",
+      area: "7,901.03 SQM",
       image: "/col-one-eleven-51.jpg",
       highlight: "Iconic Proportions",
       facts: {
         type: "Residential & Retails",
-        plot: "7,901.03 SQM / 85,047 SQFT",
+        plot: "7,901.03 SQM / 85,047 SQFT", // page-51 [file:118]
         levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 60 Residential Floors + 4 Mechanical Floors + Roof",
-        units: { bed1: 1080, bed2: 236, bed3: 50, shops: 18 }
+          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 60 Residential Floors + 4 Mechanical Floors + Roof", // [file:118]
+        units: {
+          bed1: 1080,
+          bed2: 236,
+          bed3: 50,
+          shops: 18
+        }
       }
     },
     {
       id: "amg",
-      name: "AMG Vision",
+      name: "Mercedes-Benz AMG Vision",
       tower: "Towers 8 & 9",
       units: "2,692",
-      floors: "52 Residential",
-      area: "11,626 SQM",
+      floors: "47 / 52 Residential",
+      area: "11,626.97 SQM",
       image: "/col-amg-48.jpg",
       highlight: "High-Performance Living",
       facts: {
         type: "Residential & Retails",
-        plot: "11,626.97 SQM / 125,153 SQFT",
+        plot: "11,626.97 SQM / 125,153 SQFT", // page-48 [file:118]
         levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 47/52 Residential Floors + 4 Mechanical Rooms + Roof",
-        units: { studio: 1112, bed1: 1344, bed2: 236, shops: 35 }
+          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 52 Residential Floors + 4 Mechanical Room + Roof / 47 Residential Floors + 2 Mechanical Floors + Roof", // [file:118]
+        units: {
+          studio: 1112,
+          bed1: 1344,
+          bed2: 236,
+          shops: 35
+        }
       }
     },
     {
@@ -451,15 +533,20 @@ export default function App() {
       tower: "Tower 10",
       units: "1,280",
       floors: "41 Residential",
-      area: "12,835 SQM",
+      area: "12,835.93 SQM",
       image: "/col-avtr-44.jpg",
       highlight: "Futuristic Design",
       facts: {
         type: "Residential & Retails",
-        plot: "12,835.93 SQM / 138,166 SQFT",
+        plot: "12,835.93 SQM / 138,166 SQFT", // page-44 [file:118]
         levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 41 Residential Floors + 2 Mechanical Floors + Roof",
-        units: { studio: 640, bed1: 480, bed2: 160, shops: 23 }
+          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 41 Residential Floors + 2 Mechanical Floors + Roof", // [file:118]
+        units: {
+          studio: 640,
+          bed1: 480,
+          bed2: 160,
+          shops: 23
+        }
       }
     },
     {
@@ -467,16 +554,21 @@ export default function App() {
       name: "Vision Simplex",
       tower: "Towers 11 & 12",
       units: "2,208",
-      floors: "35 Residential",
-      area: "11,359 SQM",
+      floors: "29 / 35 Residential",
+      area: "11,359.06 SQM",
       image: "/col-simplex-41.jpg",
       highlight: "Heritage Reimagined",
       facts: {
         type: "Residential & Retails",
-        plot: "11,359.06 SQM / 122,269 SQFT",
+        plot: "11,359.06 SQM / 122,269 SQFT", // page-41 [file:118]
         levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 29/35 Residential Floors + 2 Mechanical Rooms + Roof",
-        units: { studio: 1440, bed1: 520, bed2: 248, shops: 34 }
+          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 35 Residential Floors + 2 Mechanical Rooms + Roof / 29 Residential Floors + 2 Mechanical Floors + Roof", // [file:118]
+        units: {
+          studio: 1440,
+          bed1: 520,
+          bed2: 248,
+          shops: 34
+        }
       }
     }
   ];
@@ -729,7 +821,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Collections */}
+      {/* COLLECTIONS */}
       <section
         id="collections"
         className="py-32 bg-white/[0.01] border-y border-white/5"
@@ -740,94 +832,140 @@ export default function App() {
             title="The Exclusive Collections"
           />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
             {collections.map((col, idx) => (
-              <FadeIn key={col.id} delay={idx * 0.1}>
+              <FadeIn key={col.id} delay={idx * 0.08}>
                 <motion.div
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.4 }}
-                  className="group relative bg-black border border-white/10 rounded-[40px] overflow-hidden transition-all duration-700 hover:border-white/30 hover:shadow-[0_0_50px_rgba(255,255,255,0.08)]"
+                  whileHover={{ y: -6, scale: 1.01 }}
+                  transition={{ duration: 0.35 }}
+                  className="group relative bg-black border border-white/12 rounded-[40px] overflow-hidden
+                       transition-all duration-700 hover:border-white/40 hover:shadow-[0_0_70px_rgba(255,255,255,0.14)]"
                 >
+                  {/* Background image */}
                   <div className="absolute inset-0 z-0">
                     <motion.img
                       initial={{ scale: 1 }}
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 1.2 }}
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 1.1 }}
                       src={col.image}
                       alt={col.name}
-                      className="w-full h-full object-cover opacity-30 group-hover:opacity-50 grayscale-[0.2]"
+                      className="w-full h-full object-cover opacity-35 group-hover:opacity-55 grayscale-[0.2]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/20" />
                   </div>
 
-                  <div className="relative z-10 p-10 flex flex-col h-full min-h-[480px]">
+                  {/* Content */}
+                  <div className="relative z-10 p-8 md:p-9 flex flex-col h-full min-h-[480px]">
+                    {/* Title row */}
                     <div className="flex justify-between items-start mb-6">
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
+                        <p className="text-[10px] uppercase tracking-[0.28em] text-white/50 mb-1">
                           {col.tower}
                         </p>
-                        <h3 className="text-3xl font-light tracking-tight">
+                        <h3 className="text-2xl md:text-[26px] font-light tracking-tight leading-snug">
                           {col.name}
                         </h3>
                       </div>
                       <button
                         onClick={() => setSelectedCollection(col)}
-                        className="p-3 cursor-pointer rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors group/btn"
+                        className="p-3 rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md
+                             hover:bg-white/10 transition-colors group/btn"
                       >
                         <Maximize2
-                          size={16}
-                          className="text-white/40 group-hover/btn:text-white transition-colors"
+                          size={18}
+                          className="text-white/50 group-hover/btn:text-white transition-colors"
                         />
                       </button>
                     </div>
 
-                    <p className="text-xs text-white/80 font-medium tracking-[0.3em] mb-10 border-l-2 border-white/20 pl-4 uppercase">
+                    {/* Highlight chip */}
+                    <p className="inline-flex items-center gap-2 text-[11px] text-white/90 font-medium
+                            tracking-[0.22em] mb-8 border border-white/20 rounded-full px-4 py-2
+                            bg-white/5 uppercase">
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
                       {col.highlight}
                     </p>
 
-                    <div className="mt-auto space-y-6">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-white/40">
-                            <Home size={12} />{" "}
-                            <span className="text-[9px] uppercase tracking-[0.26em]">
-                              Total Units
-                            </span>
-                          </div>
-                          <p className="text-sm font-light tracking-wide">
-                            {col.units}
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-white/40">
-                            <Layers size={12} />{" "}
-                            <span className="text-[9px] uppercase tracking-[0.26em]">
-                              Scale
-                            </span>
-                          </div>
-                          <p className="text-sm font-light tracking-wide">
-                            {col.floors}
-                          </p>
-                        </div>
+                    {/* Big numbers row */}
+                    <div className="grid grid-cols-3 gap-4 mb-8">
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase tracking-[0.26em] text-white/40">
+                          Total Units
+                        </p>
+                        <p className="text-xl md:text-2xl font-semibold text-white">
+                          {col.units}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase tracking-[0.26em] text-white/40">
+                          Residential Floors
+                        </p>
+                        <p className="text-sm md:text-base font-medium text-white/90">
+                          {col.floors}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase tracking-[0.26em] text-white/40">
+                          Plot Area
+                        </p>
+                        <p className="text-sm md:text-base font-medium text-white/90">
+                          {col.area}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Unit distribution – more visual */}
+                    <div className="mt-auto pt-6 border-t border-white/10">
+                      <p className="text-[10px] uppercase tracking-[0.26em] text-white/45 mb-4">
+                        Unit Mix
+                      </p>
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        {Object.entries(col.facts.units).map(([key, val]) => {
+                          const label = key
+                            .replace("studio", "Studio")
+                            .replace("bed1", "1 Bedroom")
+                            .replace("bed2", "2 Bedroom")
+                            .replace("bed3", "3 Bedroom")
+                            .replace("bed4", "4 Bedroom")
+                            .replace("bed5", "5 Bedroom")
+                            .replace("shops", "Retail Shops");
+
+                          return (
+                            <div
+                              key={key}
+                              className="flex items-center justify-between bg-white/5 border border-white/10
+                                   rounded-2xl px-3 py-2.5"
+                            >
+                              <span className="text-[11px] uppercase tracking-[0.18em] text-white/70">
+                                {label}
+                              </span>
+                              <span className="text-sm font-semibold text-white">
+                                {val}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
 
-                      <div className="pt-6 border-t border-white/5 flex items-center justify-between">
-                        <div>
-                          <p className="text-[9px] uppercase tracking-[0.26em] text-white/40 mb-1">
-                            Plot Area
-                          </p>
-                          <p className="text-xs font-semibold text-white/90">
-                            {col.area}
-                          </p>
-                        </div>
-                        <div className="flex gap-3">
-                          <button
-                            onClick={() => setSelectedCollection(col)}
-                            className="px-6 py-3 cursor-pointer rounded-full bg-white/5 border border-white/10 text-[9px] uppercase tracking-[0.26em] font-bold hover:bg-white/10 transition-all"
-                          >
-                            Details
-                          </button>
-                        </div>
+                      {/* Buttons */}
+                      <div className="mt-6 flex items-center justify-between gap-3">
+                        <button
+                          onClick={() => setSelectedCollection(col)}
+                          className="flex-1 py-3 rounded-full bg-white text-black text-[10px]
+                               uppercase tracking-[0.26em] font-bold hover:bg-gray-200
+                               transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]"
+                        >
+                          View Details
+                        </button>
+                        <button
+                          onClick={() => scrollToSection("inquiry")}
+                          className="px-4 py-3 rounded-full bg-white/5 border border-white/20 text-[10px]
+                               uppercase tracking-[0.26em] font-medium text-white/80
+                               hover:bg-white/10 transition-all flex items-center gap-2"
+                        >
+                          Inquire
+                          <ChevronRight size={14} />
+                        </button>
                       </div>
                     </div>
                   </div>

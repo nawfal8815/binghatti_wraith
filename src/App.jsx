@@ -529,11 +529,12 @@ export default function App() {
               setIsSubmitting(true);
               const payload = Object.fromEntries(new FormData(e.target));
               try {
-                await axios.post("/.netlify/functions/lead", payload);
+                await axios.post("/api/lead", payload);
                 setNotification({ type: 'success', message: "Registered successfully." });
                 e.target.reset();
               } catch (err) {
-                setNotification({ type: 'error', message: "Error submitting." });
+                const errorMessage = err.response?.data?.message || "Error submitting.";
+                setNotification({ type: 'error', message: errorMessage });
               } finally {
                 setIsSubmitting(false);
               }

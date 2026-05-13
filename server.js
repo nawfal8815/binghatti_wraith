@@ -37,10 +37,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const functionsRouter = express.Router();
+const apiRouter = express.Router();
 
 // GET /features - Keeping compatibility
-functionsRouter.get('/features', (req, res) => {
+apiRouter.get('/features', (req, res) => {
   const features = [
     { title: "The Star Beacon", text: "12 towers defining the world's first Mercedes-Benz branded city." },
     { title: "Sensual Purity", text: "Design language evolved from automotive excellence to cityscape." },
@@ -51,10 +51,21 @@ functionsRouter.get('/features', (req, res) => {
 });
 
 // POST /lead - Saving to database and sending email
-functionsRouter.post('/lead', async (req, res) => {
+apiRouter.post('/lead', async (req, res) => {
   const { name, email, phone, unit, message } = req.body;
   
   try {
+    // Check if email or phone already exists
+    const checkQuery = `SELECT id FROM leads WHERE email = ? OR (phone = ? AND phone IS NOT NULL AND phone != '')`;
+    const [existingLeads] = await pool.execute(checkQuery, [email, phone]);
+
+    if (existingLeads.length > 0) {
+      return res.status(409).json({ 
+        success: false, 
+        message: 'You have already submitted an inquiry. Please wait for our team to contact you.' 
+      });
+    }
+
     const query = `
       INSERT INTO leads (name, email, phone, unit, message, is_read) 
       VALUES (?, ?, ?, ?, ?, 0)
@@ -97,7 +108,7 @@ functionsRouter.post('/lead', async (req, res) => {
   }
 });
 
-app.use('/.netlify/functions', functionsRouter);
+app.use('/api', apiRouter);
 
 // Static file serving
 const __filename = fileURLToPath(import.meta.url);

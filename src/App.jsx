@@ -16,7 +16,6 @@ import {
   Menu,
   X,
   ChevronRight,
-  Download,
   Phone,
   MessageCircle,
   Award,
@@ -25,7 +24,6 @@ import {
   AlertCircle,
   Globe,
   Mail,
-  ExternalLink,
   Copy,
   Layers,
   Home,
@@ -176,14 +174,83 @@ const PhoneModal = ({ isOpen, onClose, phone }) => (
   </AnimatePresence>
 );
 
+/* -------- Legal modal (Terms & Privacy) -------- */
+
+const LegalModal = ({ isOpen, onClose, title, children }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.85 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md"
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 24 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 24 }}
+          transition={{ duration: 0.3, ease: [0.17, 0.67, 0.3, 0.99] }}
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                     z-[101] w-[96%] max-w-3xl max-h-[90vh] overflow-y-auto
+                     bg-black border border-white/12 rounded-[32px] p-8 md:p-10
+                     shadow-[0_0_120px_rgba(0,0,0,0.95)] custom-scrollbar"
+        >
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 transition-colors"
+          >
+            <X size={22} className="text-white/60" />
+          </button>
+
+          <div className="space-y-6">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.32em] text-white/50 mb-2">
+                Legal Information
+              </p>
+              <h2 className="text-2xl md:text-3xl font-light text-white tracking-tight">
+                {title}
+              </h2>
+            </div>
+            <div className="space-y-4 text-sm leading-relaxed text-white/80">
+              {children}
+            </div>
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
+);
+
+/* -------- Collection detail modal with slider -------- */
+
 const CollectionModal = ({ isOpen, onClose, collection }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (isOpen) setActiveIndex(0);
+  }, [isOpen, collection?.id]);
+
   if (!collection) return null;
+
+  const gallery = collection.gallery || [];
+  const totalSlides = gallery.length;
+
+  const goNext = () => {
+    if (!totalSlides) return;
+    setActiveIndex(prev => (prev + 1) % totalSlides);
+  };
+
+  const goPrev = () => {
+    if (!totalSlides) return;
+    setActiveIndex(prev => (prev - 1 + totalSlides) % totalSlides);
+  };
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.9 }}
@@ -192,7 +259,6 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
             className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md"
           />
 
-          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -203,7 +269,6 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
                        bg-black border border-white/12 rounded-[40px] p-8 md:p-10
                        shadow-[0_0_160px_rgba(0,0,0,1)] custom-scrollbar"
           >
-            {/* Close */}
             <button
               onClick={onClose}
               className="absolute top-7 right-7 p-2 rounded-full hover:bg-white/5 transition-colors z-50"
@@ -211,44 +276,85 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
               <X size={26} className="text-white/50" />
             </button>
 
-            <div className="grid lg:grid-cols-2 gap-10">
-              {/* Left: large image + title */}
-              <div className="relative rounded-3xl overflow-hidden border border-white/12 min-h-[360px] lg:min-h-[420px]">
-                <motion.img
-                  initial={{ scale: 1.06 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 1, ease: [0.19, 0.51, 0.23, 0.99] }}
-                  src={collection.image}
-                  alt={collection.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+            <div className="grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] gap-10 items-start">
+              {/* Left: gallery slider, title on top with black font */}
+              <div className="relative rounded-3xl overflow-hidden border border-white/12 bg-white/5">
+                {totalSlides > 0 ? (
+                  <>
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={gallery[activeIndex]}
+                        src={gallery[activeIndex]}
+                        alt={`${collection.name} ${activeIndex + 1}`}
+                        className="w-full h-auto object-cover block"
+                        initial={{ opacity: 0, scale: 1.02 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.98 }}
+                        transition={{ duration: 0.5 }}
+                      />
+                    </AnimatePresence>
 
-                <div className="absolute top-6 left-6">
-                  <p className="text-[11px] uppercase tracking-[0.32em] text-white/60 mb-2">
-                    {collection.tower}
-                  </p>
-                  <h3 className="text-3xl md:text-4xl font-light text-white tracking-tight">
-                    {collection.name}
-                  </h3>
-                </div>
+                    <div className="absolute top-5 left-5 right-5 pointer-events-none">
+                      <p className="text-[11px] uppercase tracking-[0.32em] text-black mb-1.5">
+                        {collection.tower}
+                      </p>
+                      <h3 className="text-2xl md:text-[26px] font-light text-black tracking-tight leading-snug">
+                        {collection.name}
+                      </h3>
+                    </div>
 
-                <div className="absolute bottom-6 left-6 flex flex-wrap gap-3">
-                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-[11px] uppercase tracking-[0.26em] text-white/90">
-                    <span className="w-1.5 h-1.5 rounded-full bg-white" />
-                    {collection.highlight}
-                  </span>
-                </div>
+                    <div className="absolute bottom-5 left-5">
+                      <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 border border-white/20 text-[11px] uppercase tracking-[0.26em] text-white/90">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                        {collection.highlight}
+                      </span>
+                    </div>
+
+                    {totalSlides > 1 && (
+                      <div className="absolute bottom-5 right-5 flex items-center gap-2">
+                        <button
+                          onClick={goPrev}
+                          className="w-9 h-9 rounded-full bg-black/70 border border-white/30 flex items-center justify-center text-white hover:bg-black/85 transition-colors"
+                        >
+                          ‹
+                        </button>
+                        <button
+                          onClick={goNext}
+                          className="w-9 h-9 rounded-full bg-black/70 border border-white/30 flex items-center justify-center text-white hover:bg-black/85 transition-colors"
+                        >
+                          ›
+                        </button>
+                      </div>
+                    )}
+
+                    {totalSlides > 1 && (
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+                        {gallery.map((src, i) => (
+                          <button
+                            key={src}
+                            onClick={() => setActiveIndex(i)}
+                            className={`h-1.5 rounded-full transition-all ${i === activeIndex
+                                ? "w-6 bg-white"
+                                : "w-2 bg-white/40"
+                              }`}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="w-full h-56 flex items-center justify-center text-white/40 text-xs tracking-[0.3em] uppercase">
+                    No images
+                  </div>
+                )}
               </div>
 
-              {/* Right: specs & unit mix */}
+              {/* Right: facts, units, CTAs */}
               <div className="flex flex-col">
-                {/* Section label */}
-                <p className="text-[11px] uppercase tracking-[0.4em] text-white/45 mb-6">
+                <p className="text-[11px] uppercase tracking-[0.4em] text-white/45 mb-4">
                   Project Facts
                 </p>
 
-                {/* High-level stats */}
                 <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
                   <div className="rounded-2xl bg-white/4 border border-white/15 p-4">
                     <p className="text-[10px] uppercase tracking-[0.28em] text-white/45 mb-1.5">
@@ -284,7 +390,6 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
                   </div>
                 </div>
 
-                {/* Levels description */}
                 <div className="mb-8">
                   <p className="text-[10px] uppercase tracking-[0.3em] text-white/45 mb-2">
                     Architectural Composition
@@ -294,7 +399,6 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
                   </p>
                 </div>
 
-                {/* Unit mix – much clearer */}
                 <div className="mb-8">
                   <p className="text-[10px] uppercase tracking-[0.3em] text-white/45 mb-3">
                     Unit Distribution
@@ -329,7 +433,6 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
                   </div>
                 </div>
 
-                {/* CTA buttons */}
                 <div className="mt-auto pt-4 flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={() => {
@@ -361,6 +464,238 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
   );
 };
 
+/* ----------------- Collections data ----------------- */
+
+const collections = [
+  {
+    id: "maybach",
+    name: "Project Maybach",
+    tower: "Tower 1",
+    units: "816",
+    floors: "24 Residential",
+    area: "8,763.69 SQM",
+    image: `${import.meta.env.BASE_URL}col-maybach-30.jpg`,
+    highlight: "Off-Road Luxury",
+    facts: {
+      type: "Residential & Retails",
+      plot: "8,763.69 SQM / 94,332 SQFT",
+      levels:
+        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 24 Residential Floors + Mechanical Floors + Roof",
+      units: {
+        studio: 608,
+        bed1: 76,
+        bed2: 92,
+        bed3: 40,
+        shops: 15
+      }
+    },
+    gallery: [
+      `${import.meta.env.BASE_URL}ProjectMaybach/PM1.png`,
+      `${import.meta.env.BASE_URL}ProjectMaybach/PM2.png`,
+      `${import.meta.env.BASE_URL}ProjectMaybach/PM3.png`,
+      `${import.meta.env.BASE_URL}ProjectMaybach/PM4.png`
+    ]
+  },
+  {
+    id: "ultimate-luxury",
+    name: "Vision Mercedes-Maybach Ultimate Luxury",
+    tower: "Towers 2 & 3",
+    units: "1,204",
+    floors: "19 / 24 Residential",
+    area: "14,220.38 SQM",
+    image: `${import.meta.env.BASE_URL}col-luxury-34.jpg`,
+    highlight: "Curated Excellence",
+    facts: {
+      type: "Residential & Retails",
+      plot: "14,220.38 SQM / 153,067 SQFT",
+      levels:
+        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 19 Residential Floors + 24 Residential Floors + Mechanical Floors + Roof",
+      units: {
+        studio: 864,
+        bed1: 140,
+        bed2: 140,
+        bed3: 60,
+        shops: 28
+      }
+    },
+    gallery: [
+      `${import.meta.env.BASE_URL}ProjectMaybachLuzury/PML1.png`,
+      `${import.meta.env.BASE_URL}ProjectMaybachLuzury/PML2.png`,
+      `${import.meta.env.BASE_URL}ProjectMaybachLuzury/PML3.png`,
+      `${import.meta.env.BASE_URL}ProjectMaybachLuzury/PML4.png`
+    ]
+  },
+  {
+    id: "maybach6",
+    name: "Vision Mercedes-Maybach 6",
+    tower: "Towers 4 & 5",
+    units: "1,844",
+    floors: "29 / 34 Residential",
+    area: "14,325.92 SQM",
+    image: `${import.meta.env.BASE_URL}col-maybach6-37.jpg`,
+    highlight: "Ultimate Sophistication",
+    facts: {
+      type: "Residential & Retails",
+      plot: "14,325.92 SQM / 154,203 SQFT",
+      levels:
+        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 29 Residential Floors + 34 Residential Floors + 2 Mechanical Floors + Roof",
+      units: {
+        studio: 1344,
+        bed1: 220,
+        bed2: 220,
+        bed3: 60,
+        shops: 34
+      }
+    },
+    gallery: [
+      `${import.meta.env.BASE_URL}VisionMercedesMaybach6/VMM1.png`,
+      `${import.meta.env.BASE_URL}VisionMercedesMaybach6/VMM2.png`,
+      `${import.meta.env.BASE_URL}VisionMercedesMaybach6/VMM3.png`,
+      `${import.meta.env.BASE_URL}VisionMercedesMaybach6/VMM4.png`
+    ]
+  },
+  {
+    id: "iconic",
+    name: "Vision Iconic",
+    tower: "Tower 6",
+    units: "1,404",
+    floors: "66 Residential",
+    area: "22,282.20 SQM",
+    image: `${import.meta.env.BASE_URL}col-iconic-24.jpg`,
+    highlight: "66 Floors of Pure Luxury",
+    facts: {
+      type: "Residential & Retails",
+      plot: "22,282.20 SQM / 239,846 SQFT",
+      levels:
+        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 66 Residential Floors + 9 Mechanical Floors + Roof",
+      units: {
+        bed1: 1001,
+        bed2: 277,
+        bed3: 108,
+        bed4: 9,
+        bed5: 9,
+        shops: 21
+      }
+    },
+    gallery: [
+      `${import.meta.env.BASE_URL}VisionIconic/VI1.png`,
+      `${import.meta.env.BASE_URL}VisionIconic/VI2.png`,
+      `${import.meta.env.BASE_URL}VisionIconic/VI3.png`,
+      `${import.meta.env.BASE_URL}VisionIconic/VI4.png`,
+      `${import.meta.env.BASE_URL}VisionIconic/VI5.png`
+    ]
+  },
+  {
+    id: "one-eleven",
+    name: "Vision One-Eleven",
+    tower: "Tower 7",
+    units: "1,366",
+    floors: "60 Residential",
+    area: "7,901.03 SQM",
+    image: `${import.meta.env.BASE_URL}col-one-eleven-51.jpg`,
+    highlight: "Iconic Proportions",
+    facts: {
+      type: "Residential & Retails",
+      plot: "7,901.03 SQM / 85,047 SQFT",
+      levels:
+        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 60 Residential Floors + 4 Mechanical Floors + Roof",
+      units: {
+        bed1: 1080,
+        bed2: 236,
+        bed3: 50,
+        shops: 18
+      }
+    },
+    gallery: [
+      `${import.meta.env.BASE_URL}VisionOneEleven/VOE1.png`,
+      `${import.meta.env.BASE_URL}VisionOneEleven/VOE2.png`,
+      `${import.meta.env.BASE_URL}VisionOneEleven/VOE3.png`
+    ]
+  },
+  {
+    id: "amg",
+    name: "Mercedes-Benz AMG Vision",
+    tower: "Towers 8 & 9",
+    units: "2,692",
+    floors: "47 / 52 Residential",
+    area: "11,626.97 SQM",
+    image: `${import.meta.env.BASE_URL}col-amg-48.jpg`,
+    highlight: "High-Performance Living",
+    facts: {
+      type: "Residential & Retails",
+      plot: "11,626.97 SQM / 125,153 SQFT",
+      levels:
+        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 52 Residential Floors + 4 Mechanical Room + Roof / 47 Residential Floors + 2 Mechanical Floors + Roof",
+      units: {
+        studio: 1112,
+        bed1: 1344,
+        bed2: 236,
+        shops: 35
+      }
+    },
+    gallery: [
+      `${import.meta.env.BASE_URL}Mercedes-BenzAMGVision/MBAV1.png`,
+      `${import.meta.env.BASE_URL}Mercedes-BenzAMGVision/MBAV2.png`,
+      `${import.meta.env.BASE_URL}Mercedes-BenzAMGVision/MBAV3.png`
+    ]
+  },
+  {
+    id: "avtr",
+    name: "VISION AVTR",
+    tower: "Tower 10",
+    units: "1,280",
+    floors: "41 Residential",
+    area: "12,835.93 SQM",
+    image: `${import.meta.env.BASE_URL}col-avtr-44.jpg`,
+    highlight: "Futuristic Design",
+    facts: {
+      type: "Residential & Retails",
+      plot: "12,835.93 SQM / 138,166 SQFT",
+      levels:
+        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 41 Residential Floors + 2 Mechanical Floors + Roof",
+      units: {
+        studio: 640,
+        bed1: 480,
+        bed2: 160,
+        shops: 23
+      }
+    },
+    gallery: [
+      `${import.meta.env.BASE_URL}VisionAVTR/VA1.png`,
+      `${import.meta.env.BASE_URL}VisionAVTR/VA2.png`,
+      `${import.meta.env.BASE_URL}VisionAVTR/VA3.png`
+    ]
+  },
+  {
+    id: "simplex",
+    name: "Vision Simplex",
+    tower: "Towers 11 & 12",
+    units: "2,208",
+    floors: "29 / 35 Residential",
+    area: "11,359.06 SQM",
+    image: `${import.meta.env.BASE_URL}col-simplex-41.jpg`,
+    highlight: "Heritage Reimagined",
+    facts: {
+      type: "Residential & Retails",
+      plot: "11,359.06 SQM / 122,269 SQFT",
+      levels:
+        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 35 Residential Floors + 2 Mechanical Rooms + Roof / 29 Residential Floors + 2 Mechanical Floors + Roof",
+      units: {
+        studio: 1440,
+        bed1: 520,
+        bed2: 248,
+        shops: 34
+      }
+    },
+    gallery: [
+      `${import.meta.env.BASE_URL}VisionSimplex/VS1.png`,
+      `${import.meta.env.BASE_URL}VisionSimplex/VS2.png`,
+      `${import.meta.env.BASE_URL}VisionSimplex/VS3.png`,
+      `${import.meta.env.BASE_URL}VisionSimplex/VS4.png`
+    ]
+  }
+];
+
 /* ----------------- Main App ----------------- */
 
 export default function App() {
@@ -369,6 +704,8 @@ export default function App() {
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [notification, setNotification] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0.85]);
@@ -388,191 +725,6 @@ export default function App() {
     }
   }, [notification]);
 
-  const collections = [
-    {
-      id: "maybach",
-      name: "Project Maybach",
-      tower: "Tower 1",
-      units: "816", // total residential units
-      floors: "24 Residential", // + parking, basement, roof as per description
-      area: "8,763.69 SQM",
-      image: `${import.meta.env.BASE_URL}col-maybach-30.jpg`,
-      highlight: "Off-Road Luxury",
-      facts: {
-        type: "Residential & Retails",
-        plot: "8,763.69 SQM / 94,332 SQFT", // from PDF Project Facts page-30 [file:118]
-        levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 24 Residential Floors + Mechanical Floors + Roof", // [file:118]
-        units: {
-          studio: 608,
-          bed1: 76,
-          bed2: 92,
-          bed3: 40,
-          // no explicit 4/5-bed listed for this tower in Project Facts [file:118]
-          shops: 15
-        }
-      }
-    },
-    {
-      id: "ultimate-luxury",
-      name: "Vision Mercedes-Maybach Ultimate Luxury",
-      tower: "Towers 2 & 3",
-      units: "1,204",
-      floors: "19 / 24 Residential", // one tower 19, one 24 [file:118]
-      area: "14,220.38 SQM",
-     image: `${import.meta.env.BASE_URL}col-luxury-34.jpg`,
-      highlight: "Curated Excellence",
-      facts: {
-        type: "Residential & Retails",
-        plot: "14,220.38 SQM / 153,067 SQFT", // page-34 [file:118]
-        levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 19 Residential Floors + 24 Residential Floors + Mechanical Floors + Roof", // [file:118]
-        units: {
-          studio: 864,
-          bed1: 140,
-          bed2: 140,
-          bed3: 60,
-          shops: 28
-        }
-      }
-    },
-    {
-      id: "maybach6",
-      name: "Vision Mercedes-Maybach 6",
-      tower: "Towers 4 & 5",
-      units: "1,844",
-      floors: "29 / 34 Residential",
-      area: "14,325.92 SQM",
-      image: `${import.meta.env.BASE_URL}col-maybach6-37.jpg`,
-      highlight: "Ultimate Sophistication",
-      facts: {
-        type: "Residential & Retails",
-        plot: "14,325.92 SQM / 154,203 SQFT", // page-37 [file:118]
-        levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 29 Residential Floors + 34 Residential Floors + 2 Mechanical Floors + Roof", // [file:118]
-        units: {
-          studio: 1344,
-          bed1: 220,
-          bed2: 220,
-          bed3: 60,
-          shops: 34
-        }
-      }
-    },
-    {
-      id: "iconic",
-      name: "Vision Iconic",
-      tower: "Tower 6",
-      units: "1,404",
-      floors: "66 Residential",
-      area: "22,282.20 SQM",
-      image: `${import.meta.env.BASE_URL}col-iconic-24.jpg`,
-      highlight: "66 Floors of Pure Luxury",
-      facts: {
-        type: "Residential & Retails",
-        plot: "22,282.20 SQM / 239,846 SQFT", // page-24 [file:118]
-        levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 66 Residential Floors + 9 Mechanical Floors + Roof", // [file:118]
-        units: {
-          bed1: 1001,
-          bed2: 277,
-          bed3: 108,
-          bed4: 9,
-          bed5: 9,
-          shops: 21
-        }
-      }
-    },
-    {
-      id: "one-eleven",
-      name: "Vision One-Eleven",
-      tower: "Tower 7",
-      units: "1,366",
-      floors: "60 Residential",
-      area: "7,901.03 SQM",
-      image: `${import.meta.env.BASE_URL}col-one-eleven-51.jpg`,
-      highlight: "Iconic Proportions",
-      facts: {
-        type: "Residential & Retails",
-        plot: "7,901.03 SQM / 85,047 SQFT", // page-51 [file:118]
-        levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 60 Residential Floors + 4 Mechanical Floors + Roof", // [file:118]
-        units: {
-          bed1: 1080,
-          bed2: 236,
-          bed3: 50,
-          shops: 18
-        }
-      }
-    },
-    {
-      id: "amg",
-      name: "Mercedes-Benz AMG Vision",
-      tower: "Towers 8 & 9",
-      units: "2,692",
-      floors: "47 / 52 Residential",
-      area: "11,626.97 SQM",
-      image: `${import.meta.env.BASE_URL}col-amg-48.jpg`,
-      highlight: "High-Performance Living",
-      facts: {
-        type: "Residential & Retails",
-        plot: "11,626.97 SQM / 125,153 SQFT", // page-48 [file:118]
-        levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 52 Residential Floors + 4 Mechanical Room + Roof / 47 Residential Floors + 2 Mechanical Floors + Roof", // [file:118]
-        units: {
-          studio: 1112,
-          bed1: 1344,
-          bed2: 236,
-          shops: 35
-        }
-      }
-    },
-    {
-      id: "avtr",
-      name: "VISION AVTR",
-      tower: "Tower 10",
-      units: "1,280",
-      floors: "41 Residential",
-      area: "12,835.93 SQM",
-     image: `${import.meta.env.BASE_URL}col-avtr-44.jpg`,
-      highlight: "Futuristic Design",
-      facts: {
-        type: "Residential & Retails",
-        plot: "12,835.93 SQM / 138,166 SQFT", // page-44 [file:118]
-        levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 41 Residential Floors + 2 Mechanical Floors + Roof", // [file:118]
-        units: {
-          studio: 640,
-          bed1: 480,
-          bed2: 160,
-          shops: 23
-        }
-      }
-    },
-    {
-      id: "simplex",
-      name: "Vision Simplex",
-      tower: "Towers 11 & 12",
-      units: "2,208",
-      floors: "29 / 35 Residential",
-      area: "11,359.06 SQM",
-      image: `${import.meta.env.BASE_URL}col-simplex-41.jpg`,
-      highlight: "Heritage Reimagined",
-      facts: {
-        type: "Residential & Retails",
-        plot: "11,359.06 SQM / 122,269 SQFT", // page-41 [file:118]
-        levels:
-          "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 35 Residential Floors + 2 Mechanical Rooms + Roof / 29 Residential Floors + 2 Mechanical Floors + Roof", // [file:118]
-        units: {
-          studio: 1440,
-          bed1: 520,
-          bed2: 248,
-          shops: 34
-        }
-      }
-    }
-  ];
-
   const amenities = [
     { icon: <Zap size={20} />, label: "Solar Photovoltaic" },
     { icon: <Award size={20} />, label: "LEED Certification" },
@@ -589,7 +741,6 @@ export default function App() {
 
   return (
     <div className="bg-black text-white font-sans selection:bg-white selection:text-black">
-      {/* notifications */}
       <AnimatePresence>
         {notification && (
           <Notification
@@ -611,6 +762,244 @@ export default function App() {
         onClose={() => setSelectedCollection(null)}
         collection={selectedCollection}
       />
+
+      {/* Legal modals */}
+      <LegalModal
+        isOpen={showTerms}
+        onClose={() => setShowTerms(false)}
+        title="Terms of Service"
+      >
+        <p>
+          These Terms of Service govern your use of this website and any services
+          provided through it. By accessing or using the site, you agree to be
+          bound by these terms in full.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">1. Provider details</h3>
+        <p>
+          This website is operated by DP Real Estate (the “Company”, “we”, “us”
+          or “our”), established in the European Union. Our contact details are
+          set out in the “Contact” section of this site.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">2. Use of the website</h3>
+        <p>
+          The website is provided for information purposes only. You may not use
+          the site in any way that is unlawful, fraudulent, or likely to harm us,
+          our partners, or other users.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          3. No offer, no advice
+        </h3>
+        <p>
+          The content of this website does not constitute an offer, solicitation,
+          or recommendation to buy or sell any property or financial product.
+          Nothing on this site constitutes legal, tax, or investment advice.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">4. User submissions</h3>
+        <p>
+          When you submit information via forms, you confirm that all information
+          is accurate and that you are authorised to provide it. You must not
+          submit any content that is unlawful, offensive, or infringes
+          third‑party rights.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">5. Intellectual property</h3>
+        <p>
+          All content on this website, including text, images, logos, and
+          layouts, is protected by copyright and other intellectual property
+          rights. You may view this content for personal use only. Any other use
+          requires our prior written consent, unless permitted by mandatory law.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">6. Third‑party links</h3>
+        <p>
+          The site may contain links to third‑party websites. We have no control
+          over and assume no responsibility for the content, privacy policies, or
+          practices of third‑party websites.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">7. Liability</h3>
+        <p>
+          We take reasonable care to ensure that the information on this website
+          is accurate and up to date. However, the site is provided “as is” and
+          we make no warranties, express or implied, regarding its accuracy,
+          completeness, or availability.
+        </p>
+        <p>
+          To the maximum extent permitted by applicable law, we shall not be
+          liable for any indirect, incidental, or consequential damages arising
+          out of your use of, or inability to use, this website. Nothing in these
+          terms excludes or limits liability where such exclusion or limitation
+          would be unlawful under EU or local mandatory law.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          8. Data protection and privacy
+        </h3>
+        <p>
+          We process personal data in accordance with the EU General Data
+          Protection Regulation (GDPR) and applicable local laws. Details of how
+          we collect and use personal data are set out in our Privacy Policy.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          9. Changes to the website and terms
+        </h3>
+        <p>
+          We may update, suspend, or discontinue any part of the website at any
+          time. We may also amend these Terms of Service from time to time. The
+          version published on this site at the time of your visit applies.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">10. Governing law</h3>
+        <p>
+          These Terms of Service are governed by the laws of the Member State in
+          which the Company is established, without prejudice to any mandatory
+          consumer protection rules that apply in your country of residence
+          within the European Economic Area.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">11. Contact</h3>
+        <p>
+          If you have any questions about these Terms of Service, please contact
+          us using the details provided in the “Contact” section of this
+          website.
+        </p>
+      </LegalModal>
+
+      <LegalModal
+        isOpen={showPrivacy}
+        onClose={() => setShowPrivacy(false)}
+        title="Privacy Policy"
+      >
+        <p>
+          This Privacy Policy explains how we collect and use personal data when
+          you visit this website or contact us. We process personal data in
+          accordance with the EU General Data Protection Regulation (GDPR) and
+          applicable local data protection laws.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">1. Controller</h3>
+        <p>
+          The controller responsible for processing your personal data is DP
+          Real Estate (the “Company”, “we”, “us” or “our”). Our contact details
+          are available in the “Contact” section of this site.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          2. Personal data we collect
+        </h3>
+        <p>We may process the following categories of personal data:</p>
+        <ul className="list-disc list-inside text-white/80 text-sm space-y-1">
+          <li>
+            Identification and contact details (such as name, email address,
+            phone number) when you submit an enquiry form or contact us
+            directly.
+          </li>
+          <li>Communication data (content of messages and correspondence).</li>
+          <li>
+            Technical and usage data (such as IP address, browser type, device
+            information, pages viewed and interaction data), collected via
+            cookies or similar technologies.
+          </li>
+        </ul>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          3. Purposes and legal bases
+        </h3>
+        <p>We process personal data for the following purposes:</p>
+        <ul className="list-disc list-inside text-white/80 text-sm space-y-1">
+          <li>
+            To respond to your enquiries and provide information about our
+            projects and services (Art. 6(1)(b) or 6(1)(f) GDPR).
+          </li>
+          <li>
+            To manage our relationship with you and maintain our records
+            (Art. 6(1)(f) GDPR).
+          </li>
+          <li>
+            To improve the website, ensure security, and compile statistics on
+            usage (Art. 6(1)(f) GDPR).
+          </li>
+          <li>
+            Where required, to send you marketing communications with your
+            consent (Art. 6(1)(a) GDPR). You may withdraw consent at any time.
+          </li>
+        </ul>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          4. Cookies and similar technologies
+        </h3>
+        <p>
+          We may use cookies and similar technologies to operate the site,
+          analyse usage, and remember your preferences. Where required by law, we
+          will ask for your consent before setting non‑essential cookies. You can
+          manage your cookie preferences via your browser settings or any cookie
+          banner we provide.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          5. Recipients and transfers
+        </h3>
+        <p>
+          We may share personal data with service providers that assist us in
+          operating the website, managing enquiries, or providing IT services.
+          These providers act as processors and are bound by contractual
+          obligations to protect your data.
+        </p>
+        <p>
+          Where data is transferred outside the European Economic Area, we will
+          ensure appropriate safeguards are in place, such as standard
+          contractual clauses approved by the European Commission, unless an
+          adequacy decision or another lawful transfer mechanism applies.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          6. Retention period
+        </h3>
+        <p>
+          We retain personal data only for as long as necessary for the purposes
+          for which it was collected, or as required by applicable law. Enquiry
+          data is generally kept for the duration of our correspondence and a
+          reasonable period afterwards to handle follow‑up questions or legal
+          claims.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          7. Your rights under GDPR
+        </h3>
+        <p>Subject to legal conditions, you have the following rights:</p>
+        <ul className="list-disc list-inside text-white/80 text-sm space-y-1">
+          <li>Right of access to your personal data.</li>
+          <li>Right to rectification of inaccurate or incomplete data.</li>
+          <li>Right to erasure (“right to be forgotten”).</li>
+          <li>Right to restriction of processing.</li>
+          <li>Right to data portability.</li>
+          <li>
+            Right to object to processing based on our legitimate interests or
+            for direct marketing.
+          </li>
+          <li>
+            Where processing is based on consent, the right to withdraw consent
+            at any time, without affecting the lawfulness of processing before
+            withdrawal.
+          </li>
+        </ul>
+        <p>
+          To exercise your rights, please contact us using the details in the
+          “Contact” section of this website. You also have the right to lodge a
+          complaint with your local data protection authority.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          8. Security of your data
+        </h3>
+        <p>
+          We take appropriate technical and organisational measures to protect
+          personal data against unauthorised access, loss, alteration, or
+          disclosure. However, no online system can be completely secure, and we
+          cannot guarantee absolute security.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">
+          9. Changes to this Privacy Policy
+        </h3>
+        <p>
+          We may update this Privacy Policy from time to time, for example to
+          reflect legal changes or new processing activities. The latest version
+          will always be available on this website and will apply from the date
+          of publication.
+        </p>
+        <h3 className="text-sm font-semibold text-white mt-4">10. Contact</h3>
+        <p>
+          If you have any questions about this Privacy Policy or our
+          data‑protection practices, please contact us using the details
+          provided in the “Contact” section of this website.
+        </p>
+      </LegalModal>
 
       {/* Navigation */}
       <motion.nav
@@ -647,14 +1036,14 @@ export default function App() {
               <button
                 key={item}
                 onClick={() => scrollToSection(item.toLowerCase())}
-                className="text-[11px] uppercase cursor-pointer tracking-[0.3em] font-medium text-white/60 hover:text-white transition-colors"
+                className="text-[11px] uppercase tracking-[0.3em] font-medium text-white/60 hover:text-white transition-colors"
               >
                 {item}
               </button>
             ))}
             <button
               onClick={() => scrollToSection("inquiry")}
-              className="px-6 py-2.5 cursor-pointer bg-white text-black text-[11px] uppercase tracking-[0.35em] font-bold rounded-full hover:bg-gray-200 transition-all shadow-[0_0_25px_rgba(255,255,255,0.35)]"
+              className="px-6 py-2.5 bg-white text-black text-[11px] uppercase tracking-[0.35em] font-bold rounded-full hover:bg-gray-200 transition-all shadow-[0_0_25px_rgba(255,255,255,0.35)]"
             >
               Register Interest
             </button>
@@ -702,7 +1091,7 @@ export default function App() {
                       scrollToSection(item.toLowerCase());
                       setMobileMenuOpen(false);
                     }}
-                    className="text-sm text-left cursor-pointer uppercase tracking-[0.25em] text-white/70 hover:text-white py-2"
+                    className="text-sm text-left uppercase tracking-[0.25em] text-white/70 hover:text-white py-2"
                   >
                     {item === "inquiry" ? "Register Interest" : item}
                   </button>
@@ -744,8 +1133,7 @@ export default function App() {
             transition={{ delay: 0.7, duration: 1 }}
             className="text-5xl md:text-8xl font-extralight tracking-tight mb-8"
           >
-            Mercedes-Benz{" "}
-            <span className="text-white/35 italic">Places</span>
+            Mercedes-Benz <span className="text-white/35 italic">Places</span>
           </motion.h1>
           <motion.div
             initial={{ opacity: 0 }}
@@ -757,7 +1145,7 @@ export default function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => scrollToSection("overview")}
-              className="px-10 py-4 bg-white cursor-pointer text-black text-xs uppercase tracking-[0.35em] font-bold rounded-full shadow-[0_0_30px_rgba(255,255,255,0.35)]"
+              className="px-10 py-4 bg-white text-black text-xs uppercase tracking-[0.35em] font-bold rounded-full shadow-[0_0_30px_rgba(255,255,255,0.35)]"
             >
               Experience Now
             </motion.button>
@@ -773,10 +1161,7 @@ export default function App() {
       </section>
 
       {/* Overview */}
-      <section
-        id="overview"
-        className="py-32 px-6 max-w-7xl mx-auto space-y-16"
-      >
+      <section id="overview" className="py-32 px-6 max-w-7xl mx-auto space-y-16">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <FadeIn direction="right">
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden group shadow-[0_0_60px_rgba(0,0,0,0.9)] border border-white/15 bg-gradient-to-br from-white/5 to-black">
@@ -821,7 +1206,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* COLLECTIONS */}
+      {/* Collections */}
       <section
         id="collections"
         className="py-32 bg-white/[0.01] border-y border-white/5"
@@ -831,17 +1216,14 @@ export default function App() {
             subtitle="Architectural Masterpieces"
             title="The Exclusive Collections"
           />
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
             {collections.map((col, idx) => (
               <FadeIn key={col.id} delay={idx * 0.08}>
                 <motion.div
                   whileHover={{ y: -6, scale: 1.01 }}
                   transition={{ duration: 0.35 }}
-                  className="group relative bg-black border border-white/12 rounded-[40px] overflow-hidden
-                       transition-all duration-700 hover:border-white/40 hover:shadow-[0_0_70px_rgba(255,255,255,0.14)]"
+                  className="group relative bg-black border border-white/12 rounded-[40px] overflow-hidden transition-all duration-700 hover:border-white/40 hover:shadow-[0_0_70px_rgba(255,255,255,0.14)]"
                 >
-                  {/* Background image */}
                   <div className="absolute inset-0 z-0">
                     <motion.img
                       initial={{ scale: 1 }}
@@ -854,9 +1236,7 @@ export default function App() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/20" />
                   </div>
 
-                  {/* Content */}
                   <div className="relative z-10 p-8 md:p-9 flex flex-col h-full min-h-[480px]">
-                    {/* Title row */}
                     <div className="flex justify-between items-start mb-6">
                       <div>
                         <p className="text-[10px] uppercase tracking-[0.28em] text-white/50 mb-1">
@@ -868,8 +1248,7 @@ export default function App() {
                       </div>
                       <button
                         onClick={() => setSelectedCollection(col)}
-                        className="p-3 rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md
-                             hover:bg-white/10 transition-colors group/btn"
+                        className="p-3 rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md hover:bg-white/10 transition-colors group/btn"
                       >
                         <Maximize2
                           size={18}
@@ -878,15 +1257,11 @@ export default function App() {
                       </button>
                     </div>
 
-                    {/* Highlight chip */}
-                    <p className="inline-flex items-center gap-2 text-[11px] text-white/90 font-medium
-                            tracking-[0.22em] mb-8 border border-white/20 rounded-full px-4 py-2
-                            bg-white/5 uppercase">
+                    <p className="inline-flex items-center gap-2 text-[11px] text-white/90 font-medium tracking-[0.22em] mb-8 border border-white/20 rounded-full px-4 py-2 bg-white/5 uppercase">
                       <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
                       {col.highlight}
                     </p>
 
-                    {/* Big numbers row */}
                     <div className="grid grid-cols-3 gap-4 mb-8">
                       <div className="space-y-1">
                         <p className="text-[10px] uppercase tracking-[0.26em] text-white/40">
@@ -914,7 +1289,6 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Unit distribution – more visual */}
                     <div className="mt-auto pt-6 border-t border-white/10">
                       <p className="text-[10px] uppercase tracking-[0.26em] text-white/45 mb-4">
                         Unit Mix
@@ -929,12 +1303,10 @@ export default function App() {
                             .replace("bed4", "4 Bedroom")
                             .replace("bed5", "5 Bedroom")
                             .replace("shops", "Retail Shops");
-
                           return (
                             <div
                               key={key}
-                              className="flex items-center justify-between bg-white/5 border border-white/10
-                                   rounded-2xl px-3 py-2.5"
+                              className="flex items-center justify-between bg-white/5 border border-white/10 rounded-2xl px-3 py-2.5"
                             >
                               <span className="text-[11px] uppercase tracking-[0.18em] text-white/70">
                                 {label}
@@ -947,21 +1319,16 @@ export default function App() {
                         })}
                       </div>
 
-                      {/* Buttons */}
                       <div className="mt-6 flex items-center justify-between gap-3">
                         <button
                           onClick={() => setSelectedCollection(col)}
-                          className="flex-1 py-3 rounded-full bg-white text-black text-[10px]
-                               uppercase tracking-[0.26em] font-bold hover:bg-gray-200
-                               transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]"
+                          className="flex-1 py-3 rounded-full bg-white text-black text-[10px] uppercase tracking-[0.26em] font-bold hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]"
                         >
                           View Details
                         </button>
                         <button
                           onClick={() => scrollToSection("inquiry")}
-                          className="px-4 py-3 rounded-full bg-white/5 border border-white/20 text-[10px]
-                               uppercase tracking-[0.26em] font-medium text-white/80
-                               hover:bg-white/10 transition-all flex items-center gap-2"
+                          className="px-4 py-3 rounded-full bg-white/5 border border-white/20 text-[10px] uppercase tracking-[0.26em] font-medium text-white/80 hover:bg-white/10 transition-all flex items-center gap-2"
                         >
                           Inquire
                           <ChevronRight size={14} />
@@ -1004,10 +1371,7 @@ export default function App() {
       </section>
 
       {/* Location */}
-      <section
-        id="location"
-        className="py-32 px-6 bg-black relative overflow-hidden"
-      >
+      <section id="location" className="py-32 px-6 bg-black relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-white/[0.03] -skew-x-12 translate-x-1/2 blur-3xl" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
@@ -1069,10 +1433,7 @@ export default function App() {
       </section>
 
       {/* Inquiry */}
-      <section
-        id="inquiry"
-        className="py-32 px-6 relative overflow-hidden"
-      >
+      <section id="inquiry" className="py-32 px-6 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <video
             className="w-full h-full object-cover opacity-40 grayscale"
@@ -1092,46 +1453,46 @@ export default function App() {
               title="Inquire for Availability"
               light
             />
-           <form
-            className="grid md:grid-cols-2 gap-6"
-            onSubmit={async e => {
-              e.preventDefault();
-              setIsSubmitting(true);
+            <form
+              className="grid md:grid-cols-2 gap-6"
+              onSubmit={async e => {
+                e.preventDefault();
+                setIsSubmitting(true);
 
-              const payload = Object.fromEntries(new FormData(e.target));
+                const payload = Object.fromEntries(new FormData(e.target));
 
-              try {
-                const response = await axios.post(
-                  `${import.meta.env.BASE_URL}api/lead.php`,
-                  payload,
-                  {
-                    headers: {
-                      "Content-Type": "application/json"
+                try {
+                  const response = await axios.post(
+                    `${import.meta.env.BASE_URL}api/lead.php`,
+                    payload,
+                    {
+                      headers: {
+                        "Content-Type": "application/json"
+                      }
                     }
-                  }
-                );
+                  );
 
-                setNotification({
-                  type: "success",
-                  message:
-                    response.data?.message || "Registered successfully."
-                });
+                  setNotification({
+                    type: "success",
+                    message:
+                      response.data?.message || "Registered successfully."
+                  });
 
-                e.target.reset();
-              } catch (err) {
-                console.error(err);
+                  e.target.reset();
+                } catch (err) {
+                  console.error(err);
 
-                setNotification({
-                  type: "error",
-                  message:
-                    err.response?.data?.message ||
-                    "Server error. Please try again."
-                });
-              } finally {
-                setIsSubmitting(false);
-              }
-            }}
-          >
+                  setNotification({
+                    type: "error",
+                    message:
+                      err.response?.data?.message ||
+                      "Server error. Please try again."
+                  });
+                } finally {
+                  setIsSubmitting(false);
+                }
+              }}
+            >
               <div className="space-y-1">
                 <label className="text-[10px] uppercase tracking-[0.3em] text-white/40 ml-1">
                   Full Name
@@ -1192,7 +1553,7 @@ export default function App() {
               </div>
               <button
                 disabled={isSubmitting}
-                className="md:col-span-2 cursor-pointer mt-4 py-5 bg-white text-black text-xs uppercase tracking-[0.4em] font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)] disabled:opacity-50"
+                className="md:col-span-2 mt-4 py-5 bg-white text-black text-xs uppercase tracking-[0.4em] font-bold rounded-full hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)] disabled:opacity-50"
               >
                 {isSubmitting ? "Processing..." : "Submit Interest"}
               </button>
@@ -1238,7 +1599,7 @@ export default function App() {
             <div className="flex gap-4">
               <button
                 onClick={() => setPhoneModalOpen(true)}
-                className="w-10 h-10 rounded-full bg-white/5 cursor-pointer flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"
               >
                 <Phone size={18} />
               </button>
@@ -1246,7 +1607,7 @@ export default function App() {
                 href={`https://wa.me/${contactInfo.whatsapp}`}
                 target="_blank"
                 rel="noreferrer"
-                className="w-10 h-10 cursor-pointer rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors text-white/60 hover:text-white"
               >
                 <MessageCircle size={18} />
               </a>
@@ -1284,7 +1645,7 @@ export default function App() {
             </div>
             <button
               onClick={() => scrollToSection("inquiry")}
-              className="px-8 py-3 bg-white/5 border cursor-pointer border-white/10 text-white text-[10px] uppercase tracking-[0.3em] font-bold rounded-full hover:bg-white/10 transition-all"
+              className="px-8 py-3 bg-white/5 border border-white/10 text-white text-[10px] uppercase tracking-[0.3em] font-bold rounded-full hover:bg-white/10 transition-all"
             >
               Register Interest
             </button>
@@ -1294,12 +1655,18 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-6 text-[10px] uppercase tracking-[0.2em] text-gray-600">
           <span>© 2026 DP Real Estate. All rights reserved.</span>
           <div className="flex gap-8">
-            <span className="hover:text-white cursor-pointer transition-colors">
+            <button
+              onClick={() => setShowPrivacy(true)}
+              className="hover:text-white cursor-pointer transition-colors"
+            >
               Privacy Policy
-            </span>
-            <span className="hover:text-white cursor-pointer transition-colors">
+            </button>
+            <button
+              onClick={() => setShowTerms(true)}
+              className="hover:text-white cursor-pointer transition-colors"
+            >
               Terms of Service
-            </span>
+            </button>
           </div>
         </div>
       </footer>
@@ -1310,7 +1677,7 @@ export default function App() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setPhoneModalOpen(true)}
-          className="w-14 cursor-pointer h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl"
+          className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl"
         >
           <Phone size={24} />
         </motion.button>
@@ -1320,7 +1687,7 @@ export default function App() {
           href={`https://wa.me/${contactInfo.whatsapp}`}
           target="_blank"
           rel="noreferrer"
-          className="w-14 h-14 cursor-pointer bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl"
+          className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl"
         >
           <MessageCircle size={24} />
         </motion.a>

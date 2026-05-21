@@ -294,14 +294,14 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
                       />
                     </AnimatePresence>
 
-                    <div className="absolute top-5 left-5 right-5 pointer-events-none">
+                    {/* <div className="absolute top-5 left-5 right-5 pointer-events-none">
                       <p className="text-[11px] uppercase tracking-[0.32em] text-black mb-1.5">
                         {collection.tower}
                       </p>
                       <h3 className="text-2xl md:text-[26px] font-light text-black tracking-tight leading-snug">
                         {collection.name}
                       </h3>
-                    </div>
+                    </div> */}
 
                     <div className="absolute bottom-5 left-5">
                       <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 border border-white/20 text-[11px] uppercase tracking-[0.26em] text-white/90">

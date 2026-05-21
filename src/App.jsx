@@ -688,10 +688,10 @@ const collections = [
       }
     },
     gallery: [
-      `${import.meta.env.BASE_URL}VisionSimplex/VS1.png`,
-      `${import.meta.env.BASE_URL}VisionSimplex/VS2.png`,
-      `${import.meta.env.BASE_URL}VisionSimplex/VS3.png`,
-      `${import.meta.env.BASE_URL}VisionSimplex/VS4.png`
+      `${import.meta.env.BASE_URL}VIsionSimplex/VS1.png`,
+      `${import.meta.env.BASE_URL}VIsionSimplex/VS2.png`,
+      `${import.meta.env.BASE_URL}VIsionSimplex/VS3.png`,
+      `${import.meta.env.BASE_URL}VIsionSimplex/VS4.png`
     ]
   }
 ];

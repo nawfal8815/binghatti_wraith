@@ -396,7 +396,7 @@ export default function App() {
       units: "816", // total residential units
       floors: "24 Residential", // + parking, basement, roof as per description
       area: "8,763.69 SQM",
-      image: "/col-maybach-30.jpg",
+      image: `${import.meta.env.BASE_URL}col-maybach-30.jpg`,
       highlight: "Off-Road Luxury",
       facts: {
         type: "Residential & Retails",
@@ -420,7 +420,7 @@ export default function App() {
       units: "1,204",
       floors: "19 / 24 Residential", // one tower 19, one 24 [file:118]
       area: "14,220.38 SQM",
-      image: "/col-luxury-34.jpg",
+     image: `${import.meta.env.BASE_URL}col-luxury-34.jpg`,
       highlight: "Curated Excellence",
       facts: {
         type: "Residential & Retails",
@@ -443,7 +443,7 @@ export default function App() {
       units: "1,844",
       floors: "29 / 34 Residential",
       area: "14,325.92 SQM",
-      image: "/col-maybach6-37.jpg",
+      image: `${import.meta.env.BASE_URL}col-maybach6-37.jpg`,
       highlight: "Ultimate Sophistication",
       facts: {
         type: "Residential & Retails",
@@ -466,7 +466,7 @@ export default function App() {
       units: "1,404",
       floors: "66 Residential",
       area: "22,282.20 SQM",
-      image: "/col-iconic-24.jpg",
+      image: `${import.meta.env.BASE_URL}col-iconic-24.jpg`,
       highlight: "66 Floors of Pure Luxury",
       facts: {
         type: "Residential & Retails",
@@ -490,7 +490,7 @@ export default function App() {
       units: "1,366",
       floors: "60 Residential",
       area: "7,901.03 SQM",
-      image: "/col-one-eleven-51.jpg",
+      image: `${import.meta.env.BASE_URL}col-one-eleven-51.jpg`,
       highlight: "Iconic Proportions",
       facts: {
         type: "Residential & Retails",
@@ -512,7 +512,7 @@ export default function App() {
       units: "2,692",
       floors: "47 / 52 Residential",
       area: "11,626.97 SQM",
-      image: "/col-amg-48.jpg",
+      image: `${import.meta.env.BASE_URL}col-amg-48.jpg`,
       highlight: "High-Performance Living",
       facts: {
         type: "Residential & Retails",
@@ -534,7 +534,7 @@ export default function App() {
       units: "1,280",
       floors: "41 Residential",
       area: "12,835.93 SQM",
-      image: "/col-avtr-44.jpg",
+     image: `${import.meta.env.BASE_URL}col-avtr-44.jpg`,
       highlight: "Futuristic Design",
       facts: {
         type: "Residential & Retails",
@@ -556,7 +556,7 @@ export default function App() {
       units: "2,208",
       floors: "29 / 35 Residential",
       area: "11,359.06 SQM",
-      image: "/col-simplex-41.jpg",
+      image: `${import.meta.env.BASE_URL}col-simplex-41.jpg`,
       highlight: "Heritage Reimagined",
       facts: {
         type: "Residential & Retails",
@@ -628,7 +628,7 @@ export default function App() {
               className="w-12 h-12 border border-white/30 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.2)] overflow-hidden bg-white/5"
             >
               <img
-                src="/logo.jpg"
+                src={`${import.meta.env.BASE_URL}logo.jpg`}
                 alt="Logo"
                 className="w-full h-full object-cover"
               />
@@ -725,7 +725,7 @@ export default function App() {
             loop
             muted
             playsInline
-            src="/high.mp4"
+            src={`${import.meta.env.BASE_URL}high.mp4`}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/30 to-black" />
         </motion.div>
@@ -788,7 +788,7 @@ export default function App() {
                   duration: 1.2,
                   ease: [0.19, 0.51, 0.23, 0.99]
                 }}
-                src="/overview-08.jpg"
+                src={`${import.meta.env.BASE_URL}overview-08.jpg`}
                 alt="Vision"
                 className="w-full h-full object-cover"
               />
@@ -1080,7 +1080,7 @@ export default function App() {
             loop
             muted
             playsInline
-            src="/second.mp4"
+            src={`${import.meta.env.BASE_URL}second.mp4`}
           />
           <div className="absolute inset-0 bg-black/60" />
         </div>
@@ -1092,31 +1092,46 @@ export default function App() {
               title="Inquire for Availability"
               light
             />
-            <form
-              className="grid md:grid-cols-2 gap-6"
-              onSubmit={async e => {
-                e.preventDefault();
-                setIsSubmitting(true);
-                const payload = Object.fromEntries(new FormData(e.target));
-                try {
-                  await axios.post("/api/lead", payload);
-                  setNotification({
-                    type: "success",
-                    message: "Registered successfully."
-                  });
-                  e.target.reset();
-                } catch (err) {
-                  const errorMessage =
-                    err.response?.data?.message || "Error submitting.";
-                  setNotification({
-                    type: "error",
-                    message: errorMessage
-                  });
-                } finally {
-                  setIsSubmitting(false);
-                }
-              }}
-            >
+           <form
+            className="grid md:grid-cols-2 gap-6"
+            onSubmit={async e => {
+              e.preventDefault();
+              setIsSubmitting(true);
+
+              const payload = Object.fromEntries(new FormData(e.target));
+
+              try {
+                const response = await axios.post(
+                  `${import.meta.env.BASE_URL}api/lead.php`,
+                  payload,
+                  {
+                    headers: {
+                      "Content-Type": "application/json"
+                    }
+                  }
+                );
+
+                setNotification({
+                  type: "success",
+                  message:
+                    response.data?.message || "Registered successfully."
+                });
+
+                e.target.reset();
+              } catch (err) {
+                console.error(err);
+
+                setNotification({
+                  type: "error",
+                  message:
+                    err.response?.data?.message ||
+                    "Server error. Please try again."
+                });
+              } finally {
+                setIsSubmitting(false);
+              }
+            }}
+          >
               <div className="space-y-1">
                 <label className="text-[10px] uppercase tracking-[0.3em] text-white/40 ml-1">
                   Full Name
@@ -1193,7 +1208,7 @@ export default function App() {
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center overflow-hidden">
                 <img
-                  src="/logo.jpg"
+                  src={`${import.meta.env.BASE_URL}logo.jpg`}
                   alt="Logo"
                   className="w-full h-full object-cover"
                 />

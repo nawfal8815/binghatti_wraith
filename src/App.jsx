@@ -72,7 +72,7 @@ const SectionHeading = ({ subtitle, title, light = false }) => (
       whileInView={{ opacity: 1, letterSpacing: "0.42em", y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.8 }}
-      className={`text-[10px] uppercase font-light mb-4 ${light ? "text-white/60" : "text-gray-400"
+      className={`text-xs uppercase font-light mb-4 ${light ? "text-[#D4AF37]/80" : "text-[#D4AF37]"
         }`}
     >
       {subtitle}
@@ -468,230 +468,31 @@ const CollectionModal = ({ isOpen, onClose, collection }) => {
 
 const collections = [
   {
-    id: "maybach",
-    name: "Project Maybach",
-    tower: "Tower 1",
-    units: "816",
-    floors: "24 Residential",
-    area: "8,763.69 SQM",
-    image: `${import.meta.env.BASE_URL}col-maybach-30.jpg`,
-    highlight: "Off-Road Luxury",
+    id: "wraith",
+    name: "Binghatti Wraith",
+    tower: "Main Tower",
+    units: "Multiple",
+    floors: "14 Residential",
+    area: "Al Jaddaf District",
+    image: `${import.meta.env.BASE_URL}hero1.avif`,
+    highlight: "Contemporary Urban Living",
     facts: {
-      type: "Residential & Retails",
-      plot: "8,763.69 SQM / 94,332 SQFT",
+      type: "Residential & Retail",
+      plot: "Al Jaddaf, Dubai",
       levels:
-        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 24 Residential Floors + Mechanical Floors + Roof",
+        "Ground Floor + 4 Podium Levels + 14 Residential Floors + Roof",
       units: {
-        studio: 608,
-        bed1: 76,
-        bed2: 92,
-        bed3: 40,
-        shops: 15
+        studio: "Available",
+        bed1: "Available",
+        bed2: "Available",
+        bed3: "Available",
+        shops: "Available"
       }
     },
     gallery: [
-      `${import.meta.env.BASE_URL}ProjectMaybach/PM1.png`,
-      `${import.meta.env.BASE_URL}ProjectMaybach/PM2.png`,
-      `${import.meta.env.BASE_URL}ProjectMaybach/PM3.png`,
-      `${import.meta.env.BASE_URL}ProjectMaybach/PM4.png`
-    ]
-  },
-  {
-    id: "ultimate-luxury",
-    name: "Vision Mercedes-Maybach Ultimate Luxury",
-    tower: "Towers 2 & 3",
-    units: "1,204",
-    floors: "19 / 24 Residential",
-    area: "14,220.38 SQM",
-    image: `${import.meta.env.BASE_URL}col-luxury-34.jpg`,
-    highlight: "Curated Excellence",
-    facts: {
-      type: "Residential & Retails",
-      plot: "14,220.38 SQM / 153,067 SQFT",
-      levels:
-        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 19 Residential Floors + 24 Residential Floors + Mechanical Floors + Roof",
-      units: {
-        studio: 864,
-        bed1: 140,
-        bed2: 140,
-        bed3: 60,
-        shops: 28
-      }
-    },
-    gallery: [
-      `${import.meta.env.BASE_URL}ProjectMaybachLuzury/PML1.png`,
-      `${import.meta.env.BASE_URL}ProjectMaybachLuzury/PML2.png`,
-      `${import.meta.env.BASE_URL}ProjectMaybachLuzury/PML3.png`,
-      `${import.meta.env.BASE_URL}ProjectMaybachLuzury/PML4.png`
-    ]
-  },
-  {
-    id: "maybach6",
-    name: "Vision Mercedes-Maybach 6",
-    tower: "Towers 4 & 5",
-    units: "1,844",
-    floors: "29 / 34 Residential",
-    area: "14,325.92 SQM",
-    image: `${import.meta.env.BASE_URL}col-maybach6-37.jpg`,
-    highlight: "Ultimate Sophistication",
-    facts: {
-      type: "Residential & Retails",
-      plot: "14,325.92 SQM / 154,203 SQFT",
-      levels:
-        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 29 Residential Floors + 34 Residential Floors + 2 Mechanical Floors + Roof",
-      units: {
-        studio: 1344,
-        bed1: 220,
-        bed2: 220,
-        bed3: 60,
-        shops: 34
-      }
-    },
-    gallery: [
-      `${import.meta.env.BASE_URL}VisionMercedesMaybach6/VMM1.png`,
-      `${import.meta.env.BASE_URL}VisionMercedesMaybach6/VMM2.png`,
-      `${import.meta.env.BASE_URL}VisionMercedesMaybach6/VMM3.png`,
-      `${import.meta.env.BASE_URL}VisionMercedesMaybach6/VMM4.png`
-    ]
-  },
-  {
-    id: "iconic",
-    name: "Vision Iconic",
-    tower: "Tower 6",
-    units: "1,404",
-    floors: "66 Residential",
-    area: "22,282.20 SQM",
-    image: `${import.meta.env.BASE_URL}col-iconic-24.jpg`,
-    highlight: "66 Floors of Pure Luxury",
-    facts: {
-      type: "Residential & Retails",
-      plot: "22,282.20 SQM / 239,846 SQFT",
-      levels:
-        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 66 Residential Floors + 9 Mechanical Floors + Roof",
-      units: {
-        bed1: 1001,
-        bed2: 277,
-        bed3: 108,
-        bed4: 9,
-        bed5: 9,
-        shops: 21
-      }
-    },
-    gallery: [
-      `${import.meta.env.BASE_URL}VisionIconic/VI1.png`,
-      `${import.meta.env.BASE_URL}VisionIconic/VI2.png`,
-      `${import.meta.env.BASE_URL}VisionIconic/VI3.png`,
-      `${import.meta.env.BASE_URL}VisionIconic/VI4.png`,
-      `${import.meta.env.BASE_URL}VisionIconic/VI5.png`
-    ]
-  },
-  {
-    id: "one-eleven",
-    name: "Vision One-Eleven",
-    tower: "Tower 7",
-    units: "1,366",
-    floors: "60 Residential",
-    area: "7,901.03 SQM",
-    image: `${import.meta.env.BASE_URL}col-one-eleven-51.jpg`,
-    highlight: "Iconic Proportions",
-    facts: {
-      type: "Residential & Retails",
-      plot: "7,901.03 SQM / 85,047 SQFT",
-      levels:
-        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 60 Residential Floors + 4 Mechanical Floors + Roof",
-      units: {
-        bed1: 1080,
-        bed2: 236,
-        bed3: 50,
-        shops: 18
-      }
-    },
-    gallery: [
-      `${import.meta.env.BASE_URL}VisionOneEleven/VOE1.png`,
-      `${import.meta.env.BASE_URL}VisionOneEleven/VOE2.png`,
-      `${import.meta.env.BASE_URL}VisionOneEleven/VOE3.png`
-    ]
-  },
-  {
-    id: "amg",
-    name: "Mercedes-Benz AMG Vision",
-    tower: "Towers 8 & 9",
-    units: "2,692",
-    floors: "47 / 52 Residential",
-    area: "11,626.97 SQM",
-    image: `${import.meta.env.BASE_URL}col-amg-48.jpg`,
-    highlight: "High-Performance Living",
-    facts: {
-      type: "Residential & Retails",
-      plot: "11,626.97 SQM / 125,153 SQFT",
-      levels:
-        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 52 Residential Floors + 4 Mechanical Room + Roof / 47 Residential Floors + 2 Mechanical Floors + Roof",
-      units: {
-        studio: 1112,
-        bed1: 1344,
-        bed2: 236,
-        shops: 35
-      }
-    },
-    gallery: [
-      `${import.meta.env.BASE_URL}Mercedes-BenzAMGVision/MBAV1.png`,
-      `${import.meta.env.BASE_URL}Mercedes-BenzAMGVision/MBAV2.png`,
-      `${import.meta.env.BASE_URL}Mercedes-BenzAMGVision/MBAV3.png`
-    ]
-  },
-  {
-    id: "avtr",
-    name: "VISION AVTR",
-    tower: "Tower 10",
-    units: "1,280",
-    floors: "41 Residential",
-    area: "12,835.93 SQM",
-    image: `${import.meta.env.BASE_URL}col-avtr-44.jpg`,
-    highlight: "Futuristic Design",
-    facts: {
-      type: "Residential & Retails",
-      plot: "12,835.93 SQM / 138,166 SQFT",
-      levels:
-        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 41 Residential Floors + 2 Mechanical Floors + Roof",
-      units: {
-        studio: 640,
-        bed1: 480,
-        bed2: 160,
-        shops: 23
-      }
-    },
-    gallery: [
-      `${import.meta.env.BASE_URL}VisionAVTR/VA1.png`,
-      `${import.meta.env.BASE_URL}VisionAVTR/VA2.png`,
-      `${import.meta.env.BASE_URL}VisionAVTR/VA3.png`
-    ]
-  },
-  {
-    id: "simplex",
-    name: "Vision Simplex",
-    tower: "Towers 11 & 12",
-    units: "2,208",
-    floors: "29 / 35 Residential",
-    area: "11,359.06 SQM",
-    image: `${import.meta.env.BASE_URL}col-simplex-41.jpg`,
-    highlight: "Heritage Reimagined",
-    facts: {
-      type: "Residential & Retails",
-      plot: "11,359.06 SQM / 122,269 SQFT",
-      levels:
-        "Basement + Ground Floor + Mezzanine + 5 Parking Floors + 35 Residential Floors + 2 Mechanical Rooms + Roof / 29 Residential Floors + 2 Mechanical Floors + Roof",
-      units: {
-        studio: 1440,
-        bed1: 520,
-        bed2: 248,
-        shops: 34
-      }
-    },
-    gallery: [
-      `${import.meta.env.BASE_URL}VIsionSimplex/VS1.png`,
-      `${import.meta.env.BASE_URL}VIsionSimplex/VS2.png`,
-      `${import.meta.env.BASE_URL}VIsionSimplex/VS3.png`,
-      `${import.meta.env.BASE_URL}VIsionSimplex/VS4.png`
+      `${import.meta.env.BASE_URL}hero1.avif`,
+      `${import.meta.env.BASE_URL}hero2.avif`,
+      `${import.meta.env.BASE_URL}hero3.avif`,
     ]
   }
 ];
@@ -706,6 +507,7 @@ export default function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [overviewImageIndex, setOverviewImageIndex] = useState(0);
 
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0.85]);
@@ -725,13 +527,22 @@ export default function App() {
     }
   }, [notification]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setOverviewImageIndex((prev) => (prev + 1) % 3);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   const amenities = [
-    { icon: <Zap size={20} />, label: "Solar Photovoltaic" },
-    { icon: <Award size={20} />, label: "LEED Certification" },
-    { icon: <Activity size={20} />, label: "Skyline Jogging Path" },
-    { icon: <Waves size={20} />, label: "Sky Infinity Pool" },
-    { icon: <ShieldCheck size={20} />, label: "Smart System" },
-    { icon: <Car size={20} />, label: "Valet Service" }
+    { icon: <Waves size={20} />, label: "Infinity Pool & Jacuzzi" },
+    { icon: <Activity size={20} />, label: "Spa & Wellness Area" },
+    { icon: <Zap size={20} />, label: "Gym & Yoga Deck" },
+    { icon: <Award size={20} />, label: "Padel & Basketball Court" },
+    { icon: <Globe size={20} />, label: "Palm Promenade" },
+    { icon: <Home size={20} />, label: "Family BBQ & Social Area" },
+    { icon: <Layers size={20} />, label: "Children's Play Areas" },
+    { icon: <Zap size={20} />, label: "EV Charging Stations" }
   ];
 
   const scrollToSection = id => {
@@ -1022,12 +833,13 @@ export default function App() {
                 className="w-full h-full object-cover"
               />
             </motion.div>
+
             <div className="flex flex-col">
               <span className="text-sm md:text-xl font-semibold tracking-[0.35em] uppercase">
                 DP REAL ESTATE
               </span>
               <span className="text-[10px] tracking-[0.35em] uppercase text-white/50">
-                Mercedes-Benz Places
+                Wraith | Al Jaddaf
               </span>
             </div>
           </div>
@@ -1101,20 +913,18 @@ export default function App() {
           </>
         )}
       </AnimatePresence>
-
       {/* Hero */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <motion.div
-          style={{ scale: heroScale, opacity: heroOpacity }}
+          initial={{ scale: 1.2, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 2, ease: [0.19, 0.51, 0.23, 0.99] }}
           className="absolute inset-0 z-0"
         >
-          <video
+          <img
+            src={`${import.meta.env.BASE_URL}high.avif`}
+            alt="Binghatti Wraith Hero"
             className="w-full h-full object-cover grayscale-[0.35]"
-            autoPlay
-            loop
-            muted
-            playsInline
-            src={`${import.meta.env.BASE_URL}high.mp4`}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/30 to-black" />
         </motion.div>
@@ -1125,7 +935,7 @@ export default function App() {
             transition={{ delay: 0.5 }}
             className="text-xs md:text-sm uppercase tracking-[0.5em] text-white/80 mb-6 drop-shadow-[0_0_16px_rgba(255,255,255,0.35)]"
           >
-            World&apos;s First Branded City
+            Luxury Studios & Apartments in Al Jaddaf
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -1133,7 +943,7 @@ export default function App() {
             transition={{ delay: 0.7, duration: 1 }}
             className="text-5xl md:text-8xl font-extralight tracking-tight mb-8"
           >
-            Mercedes-Benz <span className="text-white/35 italic">Places</span>
+            Binghatti <span className="text-[#D4AF37]">Wraith</span>
           </motion.h1>
           <motion.div
             initial={{ opacity: 0 }}
@@ -1149,56 +959,59 @@ export default function App() {
             >
               Experience Now
             </motion.button>
-            <div className="flex items-center gap-4 text-white/60">
-              <div className="h-px w-12 bg-white/30" />
-              <span className="text-[10px] uppercase tracking-[0.35em]">
-                Binghatti City | Dubai
-              </span>
-              <div className="h-px w-12 bg-white/30" />
+            <div className="flex flex-col items-center md:items-start gap-2 text-white">
+              <div className="flex items-center gap-4">
+                <div className="h-px w-12 bg-white/60" />
+                <span className="text-xs uppercase tracking-[0.35em] text-white/90">
+                  Al Jaddaf | Dubai
+                </span>
+                <div className="h-px w-12 bg-white/60" />
+              </div>
+              <div className="text-[11px] uppercase tracking-[0.2em] font-medium text-white/90">
+                <span className="text-[#D4AF37] font-bold">Starting Price:</span> AED 799,999
+                <span className="mx-2 text-white/40">|</span>
+                Studio | 1 BR | 2 BR | 3 BR
+              </div>
             </div>
+
           </motion.div>
         </div>
       </section>
-
       {/* Overview */}
       <section id="overview" className="py-32 px-6 max-w-7xl mx-auto space-y-16">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <FadeIn direction="right">
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden group shadow-[0_0_60px_rgba(0,0,0,0.9)] border border-white/15 bg-gradient-to-br from-white/5 to-black">
               <div className="absolute inset-0 bg-white/5 group-hover:bg-transparent transition-colors duration-700" />
-              <motion.img
-                initial={{ scale: 1.05 }}
-                whileHover={{ scale: 1.12 }}
-                transition={{
-                  duration: 1.2,
-                  ease: [0.19, 0.51, 0.23, 0.99]
-                }}
-                src={`${import.meta.env.BASE_URL}overview-08.jpg`}
-                alt="Vision"
-                className="w-full h-full object-cover"
-              />
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={overviewImageIndex}
+                  src={`${import.meta.env.BASE_URL}hero${overviewImageIndex + 1}.avif`}
+                  alt={`Vision ${overviewImageIndex + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 1.2, ease: [0.19, 0.51, 0.23, 0.99] }}
+                />
+              </AnimatePresence>
             </div>
           </FadeIn>
           <div>
             <FadeIn delay={0.2}>
               <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-6 font-medium">
-                Design Philosophy
+                Urban Living Redefined
               </p>
               <h2 className="text-4xl md:text-6xl font-extralight mb-8 leading-tight">
-                Emotion and <br />
-                <span className="text-white/40 italic">Intelligence.</span>
+                Why <br />
+                <span className="text-white/40 italic">Binghatti Wraith?</span>
               </h2>
               <div className="space-y-6 text-gray-300 text-lg font-light leading-relaxed">
                 <p>
-                  Mercedes-Benz Places | Binghatti City is a landmark residential
-                  community that redefines urban living. Not merely structures,
-                  but a masterplanned city-scale vision where global brand
-                  prestige becomes a personal, lived-in experience.
+                  Binghatti Wraith redefines contemporary urban living through its striking crystalline glass façades and panoramic vistas of Dubai’s most iconic landmarks, including Burj Khalifa, Dubai Frame, and the city’s skyline.
                 </p>
                 <p>
-                  Composed of 12 towers, the city establishes an undeniable
-                  presence. Structures exercise precision engineering, where
-                  flowing, sculpted surfaces embody kinetic energy and motion.
+                  Strategically positioned in the heart of Al Jaddaf, it is just 6 minutes away from Downtown Dubai, offering seamless connectivity to DIFC, Dubai Healthcare City, and Dubai International Airport, while placing residents moments away from the cultural richness of the Mohammed Bin Rashid Library and Dubai Design District (D3).
                 </p>
               </div>
             </FadeIn>
@@ -1216,13 +1029,13 @@ export default function App() {
             subtitle="Architectural Masterpieces"
             title="The Exclusive Collections"
           />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="flex flex-wrap justify-center gap-12">
             {collections.map((col, idx) => (
               <FadeIn key={col.id} delay={idx * 0.08}>
                 <motion.div
                   whileHover={{ y: -6, scale: 1.01 }}
                   transition={{ duration: 0.35 }}
-                  className="group relative bg-black border border-white/12 rounded-[40px] overflow-hidden transition-all duration-700 hover:border-white/40 hover:shadow-[0_0_70px_rgba(255,255,255,0.14)]"
+                  className="group relative bg-black border border-white/20 rounded-[40px] overflow-hidden transition-all duration-700 hover:border-white/50 hover:shadow-[0_0_80px_rgba(255,255,255,0.2)] w-full max-w-[600px]"
                 >
                   <div className="absolute inset-0 z-0">
                     <motion.img
@@ -1231,40 +1044,40 @@ export default function App() {
                       transition={{ duration: 1.1 }}
                       src={col.image}
                       alt={col.name}
-                      className="w-full h-full object-cover opacity-35 group-hover:opacity-55 grayscale-[0.2]"
+                      className="w-full h-full object-cover opacity-40 group-hover:opacity-60 grayscale-[0.2]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-black/30" />
                   </div>
 
                   <div className="relative z-10 p-8 md:p-9 flex flex-col h-full min-h-[480px]">
                     <div className="flex justify-between items-start mb-6">
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.28em] text-white/50 mb-1">
+                        <p className="text-xs uppercase tracking-[0.28em] text-white/60 mb-1">
                           {col.tower}
                         </p>
-                        <h3 className="text-2xl md:text-[26px] font-light tracking-tight leading-snug">
+                        <h3 className="text-2xl md:text-[26px] font-light tracking-tight leading-snug text-white">
                           {col.name}
                         </h3>
                       </div>
                       <button
                         onClick={() => setSelectedCollection(col)}
-                        className="p-3 rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md hover:bg-white/10 transition-colors group/btn"
+                        className="p-3 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md hover:bg-white/20 transition-colors group/btn"
                       >
                         <Maximize2
                           size={18}
-                          className="text-white/50 group-hover/btn:text-white transition-colors"
+                          className="text-white/60 group-hover/btn:text-white transition-colors"
                         />
                       </button>
                     </div>
 
-                    <p className="inline-flex items-center gap-2 text-[11px] text-white/90 font-medium tracking-[0.22em] mb-8 border border-white/20 rounded-full px-4 py-2 bg-white/5 uppercase">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
+                    <p className="inline-flex items-center gap-2 text-sm text-white/90 font-medium tracking-[0.22em] mb-8 border border-[#D4AF37]/30 rounded-full px-4 py-2 bg-[#D4AF37]/10 uppercase">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
                       {col.highlight}
                     </p>
 
                     <div className="grid grid-cols-3 gap-4 mb-8">
                       <div className="space-y-1">
-                        <p className="text-[10px] uppercase tracking-[0.26em] text-white/40">
+                        <p className="text-xs uppercase tracking-[0.26em] text-white/50">
                           Total Units
                         </p>
                         <p className="text-xl md:text-2xl font-semibold text-white">
@@ -1272,7 +1085,7 @@ export default function App() {
                         </p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] uppercase tracking-[0.26em] text-white/40">
+                        <p className="text-xs uppercase tracking-[0.26em] text-white/50">
                           Residential Floors
                         </p>
                         <p className="text-sm md:text-base font-medium text-white/90">
@@ -1280,7 +1093,7 @@ export default function App() {
                         </p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-[10px] uppercase tracking-[0.26em] text-white/40">
+                        <p className="text-xs uppercase tracking-[0.26em] text-white/50">
                           Plot Area
                         </p>
                         <p className="text-sm md:text-base font-medium text-white/90">
@@ -1289,8 +1102,8 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="mt-auto pt-6 border-t border-white/10">
-                      <p className="text-[10px] uppercase tracking-[0.26em] text-white/45 mb-4">
+                    <div className="mt-auto pt-6 border-t border-white/20">
+                      <p className="text-xs uppercase tracking-[0.26em] text-white/50 mb-4">
                         Unit Mix
                       </p>
                       <div className="grid grid-cols-2 gap-3 text-sm">
@@ -1306,9 +1119,9 @@ export default function App() {
                           return (
                             <div
                               key={key}
-                              className="flex items-center justify-between bg-white/5 border border-white/10 rounded-2xl px-3 py-2.5"
+                              className="flex items-center justify-between bg-white/10 border border-white/10 rounded-2xl px-3 py-2.5"
                             >
-                              <span className="text-[11px] uppercase tracking-[0.18em] text-white/70">
+                              <span className="text-xs uppercase tracking-[0.18em] text-white/80">
                                 {label}
                               </span>
                               <span className="text-sm font-semibold text-white">
@@ -1322,13 +1135,13 @@ export default function App() {
                       <div className="mt-6 flex items-center justify-between gap-3">
                         <button
                           onClick={() => setSelectedCollection(col)}
-                          className="flex-1 py-3 rounded-full bg-white text-black text-[10px] uppercase tracking-[0.26em] font-bold hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]"
+                          className="flex-1 py-3 rounded-full bg-white text-black text-xs uppercase tracking-[0.26em] font-bold hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                         >
                           View Details
                         </button>
                         <button
                           onClick={() => scrollToSection("inquiry")}
-                          className="px-4 py-3 rounded-full bg-white/5 border border-white/20 text-[10px] uppercase tracking-[0.26em] font-medium text-white/80 hover:bg-white/10 transition-all flex items-center gap-2"
+                          className="px-4 py-3 rounded-full bg-white/10 border border-white/20 text-xs uppercase tracking-[0.26em] font-medium text-white/90 hover:bg-white/20 transition-all flex items-center gap-2"
                         >
                           Inquire
                           <ChevronRight size={14} />
@@ -1369,7 +1182,6 @@ export default function App() {
           </div>
         </div>
       </section>
-
       {/* Location */}
       <section id="location" className="py-32 px-6 bg-black relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-white/[0.03] -skew-x-12 translate-x-1/2 blur-3xl" />
@@ -1377,30 +1189,28 @@ export default function App() {
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div>
               <FadeIn>
-                <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-6 font-medium">
-                  Nad Al Sheba District
+                <p className="text-xs uppercase tracking-[0.4em] text-white/40 mb-6 font-medium">
+                  Al Jaddaf District
                 </p>
                 <h2 className="text-4xl md:text-5xl font-extralight mb-8 leading-tight">
                   Next In The <br />
                   <span className="text-white/40">City of Now</span>
                 </h2>
                 <p className="text-gray-400 text-lg font-light leading-relaxed mb-10">
-                  Strategically located at the junction of Dubai&apos;s drive and
-                  unique artistry. The area is globally renowned for equestrian
-                  excellence and the iconic Meydan Racecourse.
+                  Strategically positioned in the heart of Al Jaddaf, Binghatti Wraith offers seamless connectivity to Dubai's most iconic landmarks and business hubs, placing residents at the center of the city's creative and intellectual hubs.
                 </p>
                 <div className="grid grid-cols-2 gap-8">
                   {[
                     {
-                      time: "8 Minutes",
-                      place: "Dubai Mall / Burj Khalifa"
+                      time: "6 Minutes",
+                      place: "Downtown Dubai"
                     },
                     {
-                      time: "15 Minutes",
+                      time: "8 Minutes",
                       place: "Dubai Intl Airport"
                     },
-                    { time: "10 Minutes", place: "Business Bay" },
-                    { time: "20 Minutes", place: "Palm Jumeirah" }
+                    { time: "8 Minutes", place: "Zabeel Palace" },
+                    { time: "10 Minutes", place: "DIFC" }
                   ].map((loc, idx) => (
                     <div
                       key={idx}
@@ -1408,7 +1218,7 @@ export default function App() {
                     >
                       <div className="flex items-center gap-2 text-white/60">
                         <Clock size={14} />{" "}
-                        <span className="text-[10px] uppercase tracking-[0.28em]">
+                        <span className="text-xs uppercase tracking-[0.28em]">
                           {loc.time}
                         </span>
                       </div>
@@ -1432,16 +1242,58 @@ export default function App() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section id="faq" className="py-32 px-6 bg-white/[0.02] border-y border-white/5">
+        <div className="max-w-3xl mx-auto">
+          <SectionHeading
+            subtitle="Common Inquiries"
+            title="Frequently Asked Questions"
+          />
+          <div className="space-y-4">
+            {[
+              {
+                q: "What property types are available at Binghatti Wraith?",
+                a: "Binghatti Wraith offers a diverse range of property types, including Studio, 1-bedroom, 2-bedroom, and 3-bedroom apartments, along with ground-floor retail spaces."
+              },
+              {
+                q: "How many units and floors does Binghatti Wraith have?",
+                a: "Binghatti Wraith comprises the ground floor, 4 Podium Levels, 14 Residential Floors, and a Roof."
+              },
+              {
+                q: "Where is Binghatti Wraith located?",
+                a: "Binghatti Wraith is strategically situated in Al-Jaddaf, offering close proximity to Downtown Dubai, Sheikh Zayed Road, Dubai Healthcare City, and Dubai International Airport."
+              },
+              {
+                q: "How accessible is Binghatti Wraith to major roads and transport?",
+                a: "Binghatti Wraith enjoys excellent connectivity to Dubai's major routes, including E11 (Sheikh Zayed Road), E44 (Al Khail Road), and Oud Metha. Residents also benefit from convenient access to the Metro, Uber, and taxi services."
+              },
+              {
+                q: "What amenities does Binghatti Wraith offer?",
+                a: "Binghatti Wraith offers an exceptional array of lifestyle and wellness amenities, including an Infinity Pool, Jacuzzi, Private Cabanas, Spa, Gym, Yoga Deck, Padel Court, Half Basketball Court, Palm Promenade, Landscaped Gardens, and EV Charging Stations."
+              }
+            ].map((faq, idx) => (
+              <FadeIn key={idx} delay={idx * 0.1}>
+                <details className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-300">
+                  <summary className="flex items-center justify-between p-6 cursor-pointer list-none outline-none">
+                    <span className="text-sm md:text-base font-light text-white/90">{faq.q}</span>
+                    <ChevronRight size={20} className="text-white/40 group-open:rotate-90 transition-transform duration-300" />
+                  </summary>
+                  <div className="px-6 pb-6 text-sm text-white/60 font-light leading-relaxed">
+                    {faq.a}
+                  </div>
+                </details>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* Inquiry */}
       <section id="inquiry" className="py-32 px-6 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <video
+          <img
+            src={`${import.meta.env.BASE_URL}hero3.avif`}
+            alt="Inquiry Background"
             className="w-full h-full object-cover opacity-40 grayscale"
-            autoPlay
-            loop
-            muted
-            playsInline
-            src={`${import.meta.env.BASE_URL}second.mp4`}
           />
           <div className="absolute inset-0 bg-black/60" />
         </div>
@@ -1579,14 +1431,14 @@ export default function App() {
                   DP REAL ESTATE
                 </span>
                 <span className="text-[9px] font-medium tracking-[0.3em] uppercase text-white/40 leading-none">
-                  Places | Binghatti
+                  Wraith | Al Jaddaf
                 </span>
               </div>
             </div>
             <p className="text-gray-500 text-sm max-w-sm font-light">
-              The world&apos;s first Mercedes-Benz branded city, bringing
-              architectural excellence and unmatched luxury to Dubai&apos;s
-              Meydan district.
+              A masterpiece of contemporary urban living in the heart of Al Jaddaf, 
+              Binghatti Wraith brings architectural excellence and unmatched 
+              luxury to Dubai's most dynamic creative district.
             </p>
             <div className="flex flex-col gap-3 text-sm text-white/60">
               <div className="flex items-center gap-3">
